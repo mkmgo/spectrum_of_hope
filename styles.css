@@ -1,0 +1,123 @@
+/* 1. Reset and Global Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    /* Base font size */
+    font-family: sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* 2. Custom Properties (Variables) for Theming */
+
+/* --- Light Mode (Default) --- */
+body[data-theme="light"] {
+    --bg-color: #f8f9fa; /* Very light gray/off-white */
+    --text-color: #212529; /* Dark gray/black */
+    --accent-color: #007bff; /* Blue */
+    --block-bg: #ffffff; /* White block background */
+    --border-color: #e9ecef;
+}
+
+/* --- Dark Mode --- */
+body[data-theme="dark"] {
+    --bg-color: #212529; /* Dark gray */
+    --text-color: #f8f9fa; /* Light gray/off-white */
+    --accent-color: #00bfff; /* Sky Blue */
+    --block-bg: #343a40; /* Slightly darker block background */
+    --border-color: #495057;
+}
+
+/* Apply variables to the body */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+/* 3. Layout: Flexbox for Responsiveness */
+
+.story-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.story-block {
+    display: flex; /* Activate Flexbox */
+    flex-direction: column; /* Default: Stack vertically on small screens */
+    gap: 30px; /* Space between media and text */
+    padding: 30px;
+    background-color: var(--block-bg);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color);
+}
+
+/* --- Media Query for Desktop/Tablet (Flexible Flow) --- */
+@media (min-width: 768px) {
+    .story-block {
+        flex-direction: row; /* On wider screens, place side-by-side */
+    }
+
+    .story-media, .story-text {
+        /* Distribute space: media takes 40%, text takes 60% */
+        flex: 1; 
+        min-width: 0; /* Prevents overflow issues */
+    }
+    
+    .story-media {
+        flex-basis: 40%;
+    }
+
+    .story-text {
+        flex-basis: 60%;
+    }
+}
+
+/* 4. Media and Text Specific Styles */
+
+.story-media img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 4px;
+}
+
+.story-media figcaption {
+    font-size: 0.85em;
+    color: var(--text-color); /* Inherits theme color */
+    opacity: 0.7;
+    margin-top: 8px;
+}
+
+.story-text h1 {
+    font-size: 2em;
+    margin-bottom: 0.5em;
+    color: var(--accent-color);
+}
+
+.story-intro {
+    font-size: 1.15em;
+    font-weight: bold;
+    margin-bottom: 1em;
+}
+
+/* 5. Theme Toggle Button Styling (Optional) */
+
+#theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px 15px;
+    background-color: var(--accent-color);
+    color: var(--block-bg); 
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 100;
+}
