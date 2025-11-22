@@ -3,63 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive Story Template</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Campaign Index | Entrance</title>
+    <link rel="stylesheet" href="styles.css"> 
+    <style>
+        /* Quick fix: Add a tiny bit of internal CSS only for the index list items 
+           This will apply a minimal style to make the links stand out better 
+           without relying on the external CSS being modified.
+        */
+        .campaign-nav ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap; /* Allows wrapping on small screens */
+            gap: 20px;
+            justify-content: center;
+        }
+        .campaign-nav li {
+            flex-grow: 1;
+            max-width: 450px;
+        }
+        .campaign-nav a {
+            display: block;
+            padding: 20px;
+            border: 2px solid #555; /* A noticeable border */
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .campaign-nav a:hover {
+            border-color: #007bff; /* A standard blue hover color */
+        }
+        .campaign-nav h2 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.5em;
+        }
+        .campaign-nav p {
+            font-size: 0.9em;
+        }
+    </style>
 </head>
-<body data-theme="light">
-    <button id="theme-toggle">Switch to Dark Mode</button>
+<body data-theme="light" style="padding-top: 50px; text-align: center;"> 
+    
+    <nav class="language-switcher"></nav>
 
     <main class="story-container">
-        <article class="story-block">
-            <figure class="story-media">
-                <picture>
-                    <source srcset="https://res.cloudinary.com/dqwm4pdbz/image/upload/v1763741821/IMG_1723_b_pwfcos.webp" type="image/webp">
-                    <img 
-                        src="https://res.cloudinary.com/dqwm4pdbz/image/upload/v1763741821/IMG_1723_b_pwfcos.jpg" 
-                        alt="A compelling visual for the story" 
-                        loading="lazy"
-                    >
-                </picture>
-                <figcaption>The title image illustrating the main point.</figcaption>
-            </figure>
+        
+        <section class="story-text"> 
+            <h1 style="font-size: 2.5em; margin-bottom: 5px;">Our Full Campaign Story 🚀</h1>
+            <p class="story-intro" style="margin-bottom: 40px; max-width: 700px; margin-left: auto; margin-right: auto;">
+                Explore the chapters of our latest campaign below. Select any chapter to dive into the detailed narrative.
+            </p>
+        </section>
+        
+        <nav class="campaign-nav">
+            <ul>
+                <li>
+                    <a href="chapter1.html" style="background-color: var(--block-bg); color: var(--text-color);">
+                        <h2>Chapter 1: The Vision Begins</h2>
+                        <p>Read about our initial concept and goals.</p>
+                    </a>
+                </li>
+                
+                <li>
+                    <a href="chapter2.html" style="background-color: var(--block-bg); color: var(--text-color);">
+                        <h2>Chapter 2: Data & Impact</h2>
+                        <p>View the supporting metrics and evidence.</p>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        
+        <div class="call-to-action">
+             <a href="YOUR_PAYPAL_ME_LINK" target="_blank" class="paypal-button">Support Our Mission</a>
+        </div>
 
-            <section class="story-text">
-                <h1>The Chronicle of Flex and Flow</h1>
-                <p class="story-intro">
-                    Welcome to the first chapter of our responsive narrative. We're using **Flexbox** to ensure the media and text flow seamlessly, whether you're on a phone, tablet, or desktop.
-                </p>
-                <p>
-                    Responsiveness is key. When the screen is wide, the image and text sit side-by-side. When the screen narrows (like on a mobile device), they stack vertically. This is achieved entirely with a few lines of CSS Flexbox and a media query.
-                </p>
-                <p>
-                    Furthermore, the entire color scheme (background, text, links) is controlled by **CSS Custom Properties**. By changing one variable on the `body` element, we instantly switch between light and dark modes.
-                </p>
-            </section>
-        </article>
     </main>
 
     <script>
-        // Simple JavaScript for Theme Toggle
-        const toggleButton = document.getElementById('theme-toggle');
         const body = document.body;
-
-        toggleButton.addEventListener('click', () => {
-            const currentTheme = body.getAttribute('data-theme');
-            if (currentTheme === 'light') {
-                body.setAttribute('data-theme', 'dark');
-                toggleButton.textContent = 'Switch to Light Mode';
-            } else {
-                body.setAttribute('data-theme', 'light');
-                toggleButton.textContent = 'Switch to Dark Mode';
-            }
-        });
-
-        // Set initial preference based on system
-        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        if (prefersDark) {
-            body.setAttribute('data-theme', 'dark');
-            toggleButton.textContent = 'Switch to Light Mode';
+        // ... (rest of the dark/light mode script) ...
+        function applySystemTheme() {
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const systemTheme = prefersDark ? 'dark' : 'light';
+            body.setAttribute('data-theme', systemTheme);
         }
+        applySystemTheme();
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applySystemTheme);
     </script>
 </body>
 </html>
