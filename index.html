@@ -6,15 +6,12 @@
     <title>Campaign Index | Entrance</title>
     <link rel="stylesheet" href="styles.css"> 
     <style>
-        /* Quick fix: Add a tiny bit of internal CSS only for the index list items 
-           This will apply a minimal style to make the links stand out better 
-           without relying on the external CSS being modified.
-        */
+        /* Quick fix CSS for the chapter cards (from previous exchange) */
         .campaign-nav ul {
             list-style: none;
             padding: 0;
             display: flex;
-            flex-wrap: wrap; /* Allows wrapping on small screens */
+            flex-wrap: wrap; 
             gap: 20px;
             justify-content: center;
         }
@@ -25,13 +22,13 @@
         .campaign-nav a {
             display: block;
             padding: 20px;
-            border: 2px solid #555; /* A noticeable border */
+            border: 2px solid #555;
             border-radius: 8px;
             text-decoration: none;
             transition: all 0.3s;
         }
         .campaign-nav a:hover {
-            border-color: #007bff; /* A standard blue hover color */
+            border-color: #007bff;
         }
         .campaign-nav h2 {
             margin-top: 0;
@@ -45,14 +42,24 @@
 </head>
 <body data-theme="light" style="padding-top: 50px; text-align: center;"> 
     
-    <nav class="language-switcher"></nav>
-
     <main class="story-container">
         
         <section class="story-text"> 
-            <h1 style="font-size: 2.5em; margin-bottom: 5px;">Our Full Campaign Story 🚀</h1>
+            
+            <figure class="index-media" style="margin-bottom: 30px; max-width: 800px; margin-left: auto; margin-right: auto;">
+                <picture>
+                    <source srcset="https://res.cloudinary.com/dqwm4pdbz/image/upload/v1763827422/Gemini_Generated_Image_ajge3hajge3hajge_ivsbny.webp" type="image/webp">
+                    <img 
+                        src="https://res.cloudinary.com/dqwm4pdbz/image/upload/v1763827422/Gemini_Generated_Image_ajge3hajge3hajge_ivsbny.png" 
+                        alt="Compelling visual for the campaign launch" 
+                        style="width: 100%; height: auto; display: block; border-radius: 8px;"
+                    >
+                </picture>
+            </figure>
+            
+            <h1 style="font-size: 2.5em; margin-bottom: 5px;">Spectrum of Hope</h1>
             <p class="story-intro" style="margin-bottom: 40px; max-width: 700px; margin-left: auto; margin-right: auto;">
-                Explore the chapters of our latest campaign below. Select any chapter to dive into the detailed narrative.
+                This is the silent, profound struggle of a beautiful soul navigating a world that wasn't built for her. We share our story not in search of answers, but in an attempt to open a window into the reality of severe autism—a reality defined by immense love, exhaustion, and the unwavering fight to secure a path forward for our daughter.
             </p>
         </section>
         
@@ -82,7 +89,6 @@
 
     <script>
         const body = document.body;
-        // ... (rest of the dark/light mode script) ...
         function applySystemTheme() {
             const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
             const systemTheme = prefersDark ? 'dark' : 'light';
