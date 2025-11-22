@@ -1,23 +1,32 @@
 {
   "settings": {
     "defaultLanguage": "en",
-    "supportedLanguages": ["en", "de"],
-    "base_url": "/" 
+    "supportedLanguages": [
+      "en",
+      "de"
+    ],
+    "base_url": "/"
   },
-  
   "en": {
     "index": {
-      "title": "Our Full Campaign Story",
-      "intro": "Explore the chapters of our latest campaign below.",
+      "title": "Spectrum of Hope",
+      "intro": "This is the silent, profound struggle of a beautiful soul navigating a world that wasn't built for her. We share our story not in search of answers, but in an attempt to open a window into the reality of severe autism—a reality defined by immense love, exhaustion, and the unwavering fight to secure a path forward for our daughter.",
       "page_url": "index.html",
       "next_story_link": "chapter1.html",
-      "image": null,
+      "image": "https://res.cloudinary.com/dqwm4pdbz/image/upload/v1763831557/Gemini_Generated_Image_ajge3hajge3hajge_ivsbny.png",
       "chapters": [
-        {"id": "chapter1", "title": "Chapter 1: The Vision Begins", "description": "Read about our initial concept and goals."},
-        {"id": "chapter2", "title": "Chapter 2: Data & Impact", "description": "View the supporting metrics and evidence."}
+        {
+          "id": "chapter1",
+          "title": "Chapter 1: The Vision Begins",
+          "description": "Read about our initial concept and goals."
+        },
+        {
+          "id": "chapter2",
+          "title": "Chapter 2: Data & Impact",
+          "description": "View the supporting metrics and evidence."
+        }
       ]
     },
-    
     "chapter1": {
       "title": "Chapter 1: The Vision Begins",
       "page_url": "chapter1.html",
@@ -29,14 +38,30 @@
         "caption": "The first visual illustrating the core concept."
       },
       "content": [
-        {"type": "headline", "text": "The Initial Spark"},
-        {"type": "text", "text": "Welcome to the first chapter. We are using Flexbox to ensure the media and text flow seamlessly..."},
-        {"type": "headline", "text": "Project Goals"},
-        {"type": "text", "text": "This paragraph details the objectives of the campaign..."},
-        {"type": "link", "text": "Donate to Our Cause", "url": "YOUR_PAYPAL_ME_LINK", "action": "open"}
+        {
+          "type": "headline",
+          "text": "The Initial Spark"
+        },
+        {
+          "type": "text",
+          "text": "Welcome to the first chapter. We are using Flexbox to ensure the media and text flow seamlessly..."
+        },
+        {
+          "type": "headline",
+          "text": "Project Goals"
+        },
+        {
+          "type": "text",
+          "text": "This paragraph details the objectives of the campaign..."
+        },
+        {
+          "type": "link",
+          "text": "Donate to Our Cause",
+          "url": "YOUR_PAYPAL_ME_LINK",
+          "action": "open"
+        }
       ]
     },
-    
     "chapter2": {
       "title": "Chapter 2: Data & Impact",
       "page_url": "chapter2.html",
@@ -48,13 +73,23 @@
         "caption": "Statistics showing our primary results."
       },
       "content": [
-        {"type": "headline", "text": "Supporting Metrics"},
-        {"type": "text", "text": "The responsiveness is key. When the screen is wide, the image and text sit side-by-side..."},
-        {"type": "link", "text": "Download Full Report (PDF)", "url": "YOUR_CLOUDINARY_PDF_LINK.pdf", "action": "download"}
+        {
+          "type": "headline",
+          "text": "Supporting Metrics"
+        },
+        {
+          "type": "text",
+          "text": "The responsiveness is key. When the screen is wide, the image and text sit side-by-side..."
+        },
+        {
+          "type": "link",
+          "text": "Download Full Report (PDF)",
+          "url": "YOUR_CLOUDINARY_PDF_LINK.pdf",
+          "action": "download"
+        }
       ]
     }
   },
-  
   "de": {
     "index": {
       "title": "Unsere Vollständige Kampagnen-Geschichte",
@@ -63,11 +98,18 @@
       "next_story_link": "chapter1.html",
       "image": null,
       "chapters": [
-        {"id": "chapter1", "title": "Kapitel 1: Die Vision Beginnt", "description": "Lesen Sie über unser Konzept und unsere Ziele."},
-        {"id": "chapter2", "title": "Kapitel 2: Daten & Wirkung", "description": "Sehen Sie sich die unterstützenden Metriken an."}
+        {
+          "id": "chapter1",
+          "title": "Kapitel 1: Die Vision Beginnt",
+          "description": "Lesen Sie über unser Konzept und unsere Ziele."
+        },
+        {
+          "id": "chapter2",
+          "title": "Kapitel 2: Daten & Wirkung",
+          "description": "Sehen Sie sich die unterstützenden Metriken an."
+        }
       ]
     },
-    
     "chapter1": {
       "title": "Kapitel 1: Die Vision Beginnt",
       "page_url": "chapter1.html",
@@ -79,14 +121,30 @@
         "caption": "Das erste Bild, das das Kernkonzept veranschaulicht."
       },
       "content": [
-        {"type": "headline", "text": "Der Anfangsfunke"},
-        {"type": "text", "text": "Willkommen im ersten Kapitel. Wir nutzen Flexbox, um sicherzustellen, dass die Medien und der Text nahtlos fließen..."},
-        {"type": "headline", "text": "Projektziele"},
-        {"type": "text", "text": "Dieser Absatz beschreibt die Ziele der Kampagne im Detail..."},
-        {"type": "link", "text": "Spenden Sie für unsere Sache", "url": "YOUR_PAYPAL_ME_LINK", "action": "open"}
+        {
+          "type": "headline",
+          "text": "Der Anfangsfunke"
+        },
+        {
+          "type": "text",
+          "text": "Willkommen im ersten Kapitel. Wir nutzen Flexbox, um sicherzustellen, dass die Medien und der Text nahtlos fließen..."
+        },
+        {
+          "type": "headline",
+          "text": "Projektziele"
+        },
+        {
+          "type": "text",
+          "text": "Dieser Absatz beschreibt die Ziele der Kampagne im Detail..."
+        },
+        {
+          "type": "link",
+          "text": "Spenden Sie für unsere Sache",
+          "url": "YOUR_PAYPAL_ME_LINK",
+          "action": "open"
+        }
       ]
     },
-    
     "chapter2": {
       "title": "Kapitel 2: Daten & Wirkung",
       "page_url": "chapter2.html",
@@ -98,9 +156,20 @@
         "caption": "Statistiken, die unsere primären Ergebnisse zeigen."
       },
       "content": [
-        {"type": "headline", "text": "Unterstützende Metriken"},
-        {"type": "text", "text": "Die Reaktionsfähigkeit ist entscheidend. Wenn der Bildschirm breit ist, sitzen Bild und Text nebeneinander..."},
-        {"type": "link", "text": "Vollständigen Bericht herunterladen (PDF)", "url": "YOUR_CLOUDINARY_PDF_LINK.pdf", "action": "download"}
+        {
+          "type": "headline",
+          "text": "Unterstützende Metriken"
+        },
+        {
+          "type": "text",
+          "text": "Die Reaktionsfähigkeit ist entscheidend. Wenn der Bildschirm breit ist, sitzen Bild und Text nebeneinander..."
+        },
+        {
+          "type": "link",
+          "text": "Vollständigen Bericht herunterladen (PDF)",
+          "url": "YOUR_CLOUDINARY_PDF_LINK.pdf",
+          "action": "download"
+        }
       ]
     }
   }
