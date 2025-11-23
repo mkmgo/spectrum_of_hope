@@ -14,7 +14,7 @@
       "page_url": "index.html",
       "next_story_link": "chapter1.html",
       "image": {
-        "url": "https://res.cloudinary.com/dqwm4pdbz/image/upload/v1763915668/Designer_1_y5lpjr.png",
+        "url": "https://res.cloudinary.com/dqwm4pdbz/image/upload/v1763928688/spectrum_zwbqqm.png",
         "size_percentage": 40,
         "caption": "A beautiful mind"
       },
@@ -38,7 +38,7 @@
       "next_story_link": "chapter2.html",
       "image": {
         "url": "YOUR_CLOUDINARY_CHAPTER1_URL.jpg",
-        "size_percentage": 40,
+        "size_percentage": 100,
         "caption": "The first visual illustrating the core concept."
       },
       "content": [
