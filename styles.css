@@ -67,11 +67,9 @@ a:hover {
 }
 
 .story-media {
-    /* Base style for the image container */
     flex-grow: 1;
     margin: 0 0 20px 0;
     padding: 0;
-    width: 100%; /* Full width on mobile */
 }
 
 .story-media img {
@@ -114,17 +112,13 @@ a:hover {
 /* --- Responsive Layout (Side-by-Side on Desktop) --- */
 @media (min-width: 768px) {
     .story-block {
-        flex-direction: row; /* Switch to side-by-side */
+        flex-direction: row;
         align-items: flex-start;
         gap: 30px;
     }
     .story-media {
         /* JS sets flex-basis percentage here */
         margin: 0;
-    }
-
-    .story-text {
-        flex-grow: 1;
     }
 }
 
@@ -179,14 +173,4 @@ a:hover {
     margin-bottom: 5px;
     font-size: 1.4em;
     color: var(--accent-color);
-}
-
-.index-page .campaign-nav p {
-    font-size: 0.9em;
-    opacity: 0.8;
-}
-
-.index-page .index-media {
-    margin-bottom: 30px;
-    width: 100%; 
 }
