@@ -37,7 +37,7 @@
       "prev_story_link": "index.html",
       "next_story_link": "chapter2.html",
       "image": {
-        "url": "YOUR_CLOUDINARY_CHAPTER1_URL.jpg",
+        "url": "https://res.cloudinary.com/dqwm4pdbz/image/upload/v1763915668/Designer_1_y5lpjr.png",
         "size_percentage": 100,
         "caption": "The first visual illustrating the core concept."
       },
@@ -60,8 +60,8 @@
         },
         {
           "type": "link",
-          "text": "Donate to Our Cause",
-          "url": "YOUR_PAYPAL_ME_LINK",
+          "text": "Donate",
+          "url": "https://www.paypal.com/donate/?hosted_button_id=4TNEHSHJYT8YG",
           "action": "open"
         }
       ]
