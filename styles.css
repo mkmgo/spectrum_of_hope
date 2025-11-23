@@ -1,19 +1,21 @@
 :root {
     /* --- Default Light Mode Variables --- */
-    --bg-color: #f4f4f4;
-    --text-color: #333333;
-    --block-bg: #ffffff;
+    --bg-color: #f4f4f4;        /* Page background (pale gray) */
+    --text-color: #333333;      /* Dark text */
+    --block-bg: #ffffff;        /* Content block background (white) */
     --border-color: #cccccc;
-    --accent-color: #007bff; /* Primary link/highlight color */
+    --accent-color: #007bff;
+    --soft-image-bg: #fbfbfb;   /* Very light background for transparent images */
 }
 
 body[data-theme="dark"] {
     /* --- Dark Mode Overrides --- */
-    --bg-color: #121212;
-    --text-color: #e0e0e0;
-    --block-bg: #1e1e1e;
+    --bg-color: #121212;        /* Page background (dark gray) */
+    --text-color: #e0e0e0;      /* Light text */
+    --block-bg: #1e1e1e;        /* Content block background (darker gray) */
     --border-color: #333333;
-    --accent-color: #4a90e2; /* Brighter blue for dark contrast */
+    --accent-color: #4a90e2;
+    --soft-image-bg: #282828;   /* Slightly darker background for transparent images */
 }
 
 /* --- Global Base Styles --- */
@@ -59,17 +61,47 @@ a:hover {
     border-bottom: 1px solid var(--border-color);
 }
 
-/* --- Story Block (Chapter Page Layout) --- */
+/* --- Chapter Page Contrast & Layout FIX --- */
+
 .story-block {
     display: flex;
-    flex-direction: column; /* Stacked by default */
-    padding: 20px;
+    flex-direction: column; 
+    padding: 20px 0; /* Adjust padding here to avoid double padding */
 }
+
+.story-block .story-text {
+    /* CRUCIAL FIX: Apply block background for contrast */
+    background-color: var(--block-bg); 
+    padding: 30px; 
+    border-radius: 8px; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--border-color);
+    flex-grow: 2;
+}
+
+/* Sequential Navigation Style */
+#chapter-nav-top {
+    background-color: var(--block-bg);
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid var(--border-color);
+}
+
+#chapter-nav-top a {
+    font-weight: bold;
+    margin: 0 10px;
+    display: inline-block;
+}
+
+/* --- Image Styling --- */
 
 .story-media {
     flex-grow: 1;
     margin: 0 0 20px 0;
     padding: 0;
+    width: 100%; 
 }
 
 .story-media img {
@@ -88,8 +120,11 @@ a:hover {
     text-align: left;
 }
 
-.story-text {
-    flex-grow: 2;
+/* Conditional Soft Background for Images */
+.soft-background-image {
+    background-color: var(--soft-image-bg);
+    padding: 10px; 
+    border-radius: 8px; 
 }
 
 /* --- Nav Button Styles (PayPal, Download) --- */
@@ -106,24 +141,29 @@ a:hover {
 }
 
 .paypal-button:hover, .download-link:hover {
-    background-color: #0056b3; /* Slightly darker shade */
+    background-color: #0056b3; 
 }
 
 /* --- Responsive Layout (Side-by-Side on Desktop) --- */
 @media (min-width: 768px) {
     .story-block {
-        flex-direction: row;
+        flex-direction: row; 
         align-items: flex-start;
         gap: 30px;
+        padding: 20px; /* Restore padding after removing it above */
     }
     .story-media {
-        /* JS sets flex-basis percentage here */
         margin: 0;
     }
 }
 
-/* --- INDEX PAGE SPECIFIC STYLING (Left Alignment & Appeal) --- */
+/* --- INDEX PAGE SPECIFIC STYLING --- */
 .index-page .story-text {
+    background-color: initial; /* Remove block background for index intro text */
+    padding: initial;
+    border-radius: initial;
+    box-shadow: initial;
+    border: initial;
     text-align: left; 
     padding-top: 40px;
 }
@@ -173,4 +213,14 @@ a:hover {
     margin-bottom: 5px;
     font-size: 1.4em;
     color: var(--accent-color);
+}
+
+.index-page .campaign-nav p {
+    font-size: 0.9em;
+    opacity: 0.8;
+}
+
+.index-page .index-media {
+    margin-bottom: 30px;
+    width: 100%; 
 }
