@@ -1,7 +1,68 @@
-/* --- Global Story Block Layout --- */
+:root {
+    /* --- Default Light Mode Variables --- */
+    --bg-color: #f4f4f4;
+    --text-color: #333333;
+    --block-bg: #ffffff;
+    --border-color: #cccccc;
+    --accent-color: #007bff; /* Primary link/highlight color */
+}
+
+body[data-theme="dark"] {
+    /* --- Dark Mode Overrides --- */
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --block-bg: #1e1e1e;
+    --border-color: #333333;
+    --accent-color: #4a90e2; /* Brighter blue for dark contrast */
+}
+
+/* --- Global Base Styles --- */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+h1, h2, h3 {
+    color: var(--text-color);
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+}
+
+a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: var(--accent-color);
+    text-decoration: underline;
+}
+
+/* --- Container and Layout --- */
+.story-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* --- Language Switcher --- */
+.language-switcher {
+    text-align: right;
+    padding: 10px 20px;
+    background-color: var(--block-bg);
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* --- Story Block (Chapter Page Layout) --- */
 .story-block {
     display: flex;
-    flex-direction: column; /* Stacked by default on mobile */
+    flex-direction: column; /* Stacked by default */
     padding: 20px;
 }
 
@@ -10,8 +71,44 @@
     flex-grow: 1;
     margin: 0 0 20px 0;
     padding: 0;
-    /* On mobile (small screen), the image will occupy 100% of the width */
-    width: 100%; 
+    width: 100%; /* Full width on mobile */
+}
+
+.story-media img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+}
+
+.story-media figcaption {
+    font-style: italic;
+    font-size: 0.9em;
+    color: var(--text-color);
+    opacity: 0.7;
+    margin-top: 5px;
+    text-align: left;
+}
+
+.story-text {
+    flex-grow: 2;
+}
+
+/* --- Nav Button Styles (PayPal, Download) --- */
+.paypal-button, .download-link {
+    display: inline-block;
+    background-color: var(--accent-color); 
+    color: var(--block-bg); 
+    padding: 10px 25px;
+    margin: 15px 10px 15px 0;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.paypal-button:hover, .download-link:hover {
+    background-color: #0056b3; /* Slightly darker shade */
 }
 
 /* --- Responsive Layout (Side-by-Side on Desktop) --- */
@@ -21,17 +118,75 @@
         align-items: flex-start;
         gap: 30px;
     }
-    
     .story-media {
-        /*
-         * On desktop, the JS sets 'flex-basis' using size_percentage (e.g., 40%)
-         * The remaining width will be taken by .story-text
-         */
+        /* JS sets flex-basis percentage here */
         margin: 0;
     }
 
     .story-text {
-        /* The text takes up the remaining width */
         flex-grow: 1;
     }
+}
+
+/* --- INDEX PAGE SPECIFIC STYLING (Left Alignment & Appeal) --- */
+.index-page .story-text {
+    text-align: left; 
+    padding-top: 40px;
+}
+
+.index-page h1 {
+    font-size: 2.5em;
+    margin-bottom: 0.2em;
+    color: var(--accent-color);
+    text-align: left;
+}
+
+.index-page .story-intro {
+    font-size: 1.1em;
+    margin-top: 10px;
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+.index-page .campaign-nav ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+    gap: 20px;
+    justify-content: center;
+}
+
+.index-page .campaign-nav a {
+    display: block;
+    padding: 20px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    transition: all 0.3s;
+    background-color: var(--block-bg);
+    color: var(--text-color);
+    text-align: left;
+}
+
+.index-page .campaign-nav a:hover {
+    border-color: var(--accent-color);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.index-page .campaign-nav h2 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-size: 1.4em;
+    color: var(--accent-color);
+}
+
+.index-page .campaign-nav p {
+    font-size: 0.9em;
+    opacity: 0.8;
+}
+
+.index-page .index-media {
+    margin-bottom: 30px;
+    width: 100%; 
 }
