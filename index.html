@@ -3,99 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Campaign Index | Entrance</title>
+    <title id="page-title">Loading Campaign Index...</title>
     <link rel="stylesheet" href="styles.css"> 
-    <style>
-        /* Quick fix CSS for the chapter cards (from previous exchange) */
-        .campaign-nav ul {
-            list-style: none;
-            padding: 0;
-            display: flex;
-            flex-wrap: wrap; 
-            gap: 20px;
-            justify-content: center;
-        }
-        .campaign-nav li {
-            flex-grow: 1;
-            max-width: 450px;
-        }
-        .campaign-nav a {
-            display: block;
-            padding: 20px;
-            border: 2px solid #555;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-        .campaign-nav a:hover {
-            border-color: #007bff;
-        }
-        .campaign-nav h2 {
-            margin-top: 0;
-            margin-bottom: 5px;
-            font-size: 1.5em;
-        }
-        .campaign-nav p {
-            font-size: 0.9em;
-        }
-    </style>
 </head>
-<body data-theme="light" style="padding-top: 50px; text-align: center;"> 
+<body data-theme="light">
     
-    <main class="story-container">
+    <nav class="language-switcher" id="lang-switcher"></nav>
+
+    <main class="story-container index-page">
         
         <section class="story-text"> 
             
-            <figure class="index-media" style="margin-bottom: 30px; max-width: 800px; margin-left: auto; margin-right: auto;">
-                <picture>
-                    <source srcset="https://res.cloudinary.com/dqwm4pdbz/image/upload/v1763827422/Gemini_Generated_Image_ajge3hajge3hajge_ivsbny.webp" type="image/webp">
-                    <img 
-                        src="https://res.cloudinary.com/dqwm4pdbz/image/upload/v1763827422/Gemini_Generated_Image_ajge3hajge3hajge_ivsbny.png" 
-                        alt="Compelling visual for the campaign launch" 
-                        style="width: 100%; height: auto; display: block; border-radius: 8px;"
-                    >
-                </picture>
-            </figure>
+            <figure class="index-media" id="image-container"></figure>
             
-            <h1 style="font-size: 2.5em; margin-bottom: 5px;">Spectrum of Hope</h1>
-            <p class="story-intro" style="margin-bottom: 40px; max-width: 700px; margin-left: auto; margin-right: auto;">
-                This is the silent, profound struggle of a beautiful soul navigating a world that wasn't built for her. We share our story not in search of answers, but in an attempt to open a window into the reality of severe autism—a reality defined by immense love, exhaustion, and the unwavering fight to secure a path forward for our daughter.
-            </p>
+            <h1 id="main-headline">Loading...</h1>
+            <p class="story-intro" id="intro-text">Loading...</p>
+            
         </section>
         
         <nav class="campaign-nav">
-            <ul>
-                <li>
-                    <a href="chapter1.html" style="background-color: var(--block-bg); color: var(--text-color);">
-                        <h2>Chapter 1: The Vision Begins</h2>
-                        <p>Read about our initial concept and goals.</p>
-                    </a>
-                </li>
-                
-                <li>
-                    <a href="chapter2.html" style="background-color: var(--block-bg); color: var(--text-color);">
-                        <h2>Chapter 2: Data & Impact</h2>
-                        <p>View the supporting metrics and evidence.</p>
-                    </a>
-                </li>
-            </ul>
+            <ul id="chapter-list"> 
+                </ul>
         </nav>
         
         <div class="call-to-action">
-             <a href="YOUR_PAYPAL_ME_LINK" target="_blank" class="paypal-button">Support Our Mission</a>
+             <a href="#" target="_blank" class="paypal-button">Support Our Mission</a>
         </div>
 
     </main>
 
     <script>
         const body = document.body;
+        let currentLang = 'en';
+
+        // --- Function to get the current language from the URL ---
+        function getLang() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('lang') || 'en'; 
+        }
+
+        // --- 1. Content Loading Function ---
+        async function loadContent() {
+            currentLang = getLang();
+
+            try {
+                const response = await fetch('content.json');
+                const data = await response.json();
+                const pageData = data[currentLang]['index'];
+                const settings = data.settings;
+
+                // 1. Update Main Text
+                document.getElementById('page-title').textContent = pageData.title;
+                document.getElementById('main-headline').textContent = pageData.title;
+                document.getElementById('intro-text').textContent = pageData.intro;
+
+                // 2. Build Chapter List
+                const chapterList = document.getElementById('chapter-list');
+                chapterList.innerHTML = ''; 
+                
+                pageData.chapters.forEach(chapter => {
+                    const li = document.createElement('li');
+                    const a = document.createElement('a');
+                    
+                    // Set the link target, maintaining the current language
+                    a.href = `${chapter.id}.html?lang=${currentLang}`;
+                    a.innerHTML = `
+                        <h2>${chapter.title}</h2>
+                        <p>${chapter.description}</p>
+                    `;
+                    li.appendChild(a);
+                    chapterList.appendChild(li);
+                });
+
+                // 3. Inject Image (The image will always fill the 100% container width)
+                const imgContainer = document.getElementById('image-container');
+                const imgData = pageData.image;
+
+                if (imgData) {
+                    const webpUrl = imgData.url.replace(/\.(jpe?g|png)$/i, '.webp'); 
+                    
+                    const imgHTML = `
+                        <picture>
+                            <source srcset="${webpUrl}" type="image/webp">
+                            <img src="${imgData.url}" alt="${imgData.caption}" style="width: 100%; height: auto; border-radius: 8px;">
+                        </picture>
+                        <figcaption>${imgData.caption}</figcaption>
+                    `;
+                    imgContainer.innerHTML = imgHTML;
+                } else {
+                    imgContainer.style.display = 'none';
+                }
+
+                // 4. Build Language Switcher
+                const langSwitcher = document.getElementById('lang-switcher');
+                langSwitcher.innerHTML = settings.supportedLanguages.map(lang => {
+                    const newUrl = `${window.location.pathname}?lang=${lang}`;
+                    return `<a href="${newUrl}" style="margin: 0 10px; font-weight: ${lang === currentLang ? 'bold' : 'normal'}">${lang.toUpperCase()}</a>`;
+                }).join('');
+
+            } catch (error) {
+                console.error("Error loading index content:", error);
+                document.getElementById('main-headline').textContent = "Error Loading Content. Check content.json.";
+            }
+        }
+        
+        // --- 2. Theme Logic ---
         function applySystemTheme() {
             const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-            const systemTheme = prefersDark ? 'dark' : 'light';
-            body.setAttribute('data-theme', systemTheme);
+            body.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
         }
-        applySystemTheme();
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applySystemTheme);
+
+        // --- 3. Run on Load ---
+        document.addEventListener('DOMContentLoaded', () => {
+            loadContent();
+            applySystemTheme();
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applySystemTheme);
+        });
     </script>
 </body>
 </html>

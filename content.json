@@ -13,7 +13,11 @@
       "intro": "This is the silent, profound struggle of a beautiful soul navigating a world that wasn't built for her. We share our story not in search of answers, but in an attempt to open a window into the reality of severe autism—a reality defined by immense love, exhaustion, and the unwavering fight to secure a path forward for our daughter.",
       "page_url": "index.html",
       "next_story_link": "chapter1.html",
-      "image": "https://res.cloudinary.com/dqwm4pdbz/image/upload/v1763831557/Gemini_Generated_Image_ajge3hajge3hajge_ivsbny.png",
+      "image": {
+        "url": "https://res.cloudinary.com/dqwm4pdbz/image/upload/v1763831557/Gemini_Generated_Image_ajge3hajge3hajge_ivsbny.png",
+        "size_percentage": 100,
+        "caption": "A beautiful mind"
+      },
       "chapters": [
         {
           "id": "chapter1",
@@ -92,21 +96,25 @@
   },
   "de": {
     "index": {
-      "title": "Unsere Vollständige Kampagnen-Geschichte",
-      "intro": "Entdecken Sie die Kapitel unserer neuesten Kampagne unten.",
+      "title": "Unsere Vollständige Kampagnen-Geschichte 🚀",
+      "intro": "Entdecken Sie die Kapitel unserer neuesten Kampagne unten. Wählen Sie ein beliebiges Kapitel aus, um in die detaillierte Erzählung einzutauchen.",
       "page_url": "index.html",
       "next_story_link": "chapter1.html",
-      "image": null,
+      "image": {
+        "url": "YOUR_CLOUDINARY_INDEX_IMAGE_URL.jpg",
+        "size_percentage": 100,
+        "caption": "Das Hauptbild für den Kampagnenstart."
+      },
       "chapters": [
         {
           "id": "chapter1",
           "title": "Kapitel 1: Die Vision Beginnt",
-          "description": "Lesen Sie über unser Konzept und unsere Ziele."
+          "description": "Lesen Sie über unser ursprüngliches Konzept und unsere Ziele."
         },
         {
           "id": "chapter2",
           "title": "Kapitel 2: Daten & Wirkung",
-          "description": "Sehen Sie sich die unterstützenden Metriken an."
+          "description": "Sehen Sie sich die unterstützenden Metriken und Beweise an."
         }
       ]
     },

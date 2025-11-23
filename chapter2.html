@@ -3,63 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive Story Template</title>
-    <link rel="stylesheet" href="styles.css">
+    <title id="page-title">Loading Chapter...</title>
+    <link rel="stylesheet" href="styles.css"> 
 </head>
 <body data-theme="light">
-    <button id="theme-toggle">Switch to Dark Mode</button>
+    
+    <nav class="language-switcher" id="lang-switcher"></nav>
 
     <main class="story-container">
         <article class="story-block">
-            <figure class="story-media">
-                <picture>
-                    <source srcset="https://res.cloudinary.com/dqwm4pdbz/image/upload/v1763824458/IMG_1583_vqzexl.webp" type="image/webp">
-                    <img 
-                        src="https://res.cloudinary.com/dqwm4pdbz/image/upload/v1763824458/IMG_1583_vqzexl.jpg" 
-                        alt="A compelling visual for the story" 
-                        loading="lazy"
-                    >
-                </picture>
-                <figcaption>The title image illustrating the main point.</figcaption>
-            </figure>
+            
+            <nav id="chapter-nav-top">
+                <a id="prev-story-link" href="#">← Previous</a> |
+                <a id="home-link" href="#">Home</a> |
+                <a id="next-story-link" href="#">Next →</a>
+            </nav>
+            
+            <figure class="story-media" id="image-container"></figure>
 
             <section class="story-text">
-                <h1>Story 2 : The Chronicle of Flex and Flow</h1>
-                <p class="story-intro">
-                    Welcome to the first chapter of our responsive narrative. We're using **Flexbox** to ensure the media and text flow seamlessly, whether you're on a phone, tablet, or desktop.
-                </p>
-                <p>
-                    Responsiveness is key. When the screen is wide, the image and text sit side-by-side. When the screen narrows (like on a mobile device), they stack vertically. This is achieved entirely with a few lines of CSS Flexbox and a media query.
-                </p>
-                <p>
-                    Furthermore, the entire color scheme (background, text, links) is controlled by **CSS Custom Properties**. By changing one variable on the `body` element, we instantly switch between light and dark modes.
-                </p>
+                <h1 id="page-title-main">Loading...</h1>
+                <div id="content-area"></div> 
             </section>
+
         </article>
     </main>
 
     <script>
-        // Simple JavaScript for Theme Toggle
-        const toggleButton = document.getElementById('theme-toggle');
         const body = document.body;
+        let currentLang = 'en';
 
-        toggleButton.addEventListener('click', () => {
-            const currentTheme = body.getAttribute('data-theme');
-            if (currentTheme === 'light') {
-                body.setAttribute('data-theme', 'dark');
-                toggleButton.textContent = 'Switch to Light Mode';
-            } else {
-                body.setAttribute('data-theme', 'light');
-                toggleButton.textContent = 'Switch to Dark Mode';
-            }
-        });
-
-        // Set initial preference based on system
-        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        if (prefersDark) {
-            body.setAttribute('data-theme', 'dark');
-            toggleButton.textContent = 'Switch to Light Mode';
+        function getLang() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('lang') || 'en'; 
         }
+        
+        function getPageId() {
+            const path = window.location.pathname;
+            const filename = path.substring(path.lastIndexOf('/') + 1);
+            return filename.split('.')[0]; // e.g., 'chapter1'
+        }
+        
+        // --- 1. Content Loading Function ---
+        async function loadContent() {
+            currentLang = getLang();
+            const pageId = getPageId();
+
+            try {
+                const response = await fetch('content.json');
+                const data = await response.json();
+                const pageData = data[currentLang][pageId];
+                const settings = data.settings;
+                
+                if (!pageData) throw new Error("Content not found for this page/language.");
+
+                // 1. Update Title and Nav
+                document.getElementById('page-title').textContent = pageData.title;
+                document.getElementById('page-title-main').textContent = pageData.title;
+                
+                // 2. Set Navigation Links
+                const homeLinkUrl = `${data[currentLang]['index'].page_url}?lang=${currentLang}`;
+                document.getElementById('home-link').href = homeLinkUrl;
+                
+                // Previous Link
+                const prevLink = document.getElementById('prev-story-link');
+                if (pageData.prev_story_link) {
+                    prevLink.href = `${pageData.prev_story_link}?lang=${currentLang}`;
+                    prevLink.style.display = 'inline';
+                } else { prevLink.style.display = 'none'; }
+                
+                // Next Link
+                const nextLink = document.getElementById('next-story-link');
+                if (pageData.next_story_link) {
+                    nextLink.href = `${pageData.next_story_link}?lang=${currentLang}`;
+                    nextLink.style.display = 'inline';
+                } else { nextLink.style.display = 'none'; }
+
+                // 3. Inject Image and Caption (Includes PNG/JPG to WebP fix)
+                const imgContainer = document.getElementById('image-container');
+                const imgData = pageData.image;
+
+                if (imgData) {
+                    // FIX: Flexible replacement for JPG or PNG
+                    const webpUrl = imgData.url.replace(/\.(jpe?g|png)$/i, '.webp'); 
+
+                    const imgHTML = `
+                        <picture>
+                            <source srcset="${webpUrl}" type="image/webp">
+                            <img 
+                                src="${imgData.url}" 
+                                alt="${imgData.caption}" 
+                                style="width: 100%;" 
+                            >
+                        </picture>
+                        <figcaption>${imgData.caption}</figcaption>
+                    `;
+                    imgContainer.innerHTML = imgHTML;
+                    
+                    // Set the image's width relative to the text using flex-basis (for desktop)
+                    imgContainer.style.flexBasis = imgData.size_percentage + '%'; 
+                } else {
+                    imgContainer.style.display = 'none';
+                }
+
+                // 4. Build Content Area (Headlines, Text, Links)
+                const contentArea = document.getElementById('content-area');
+                contentArea.innerHTML = '';
+                
+                pageData.content.forEach(item => {
+                    let element;
+                    if (item.type === 'headline') {
+                        element = document.createElement('h2');
+                        element.textContent = item.text;
+                    } else if (item.type === 'text') {
+                        element = document.createElement('p');
+                        element.textContent = item.text;
+                    } else if (item.type === 'link') {
+                        element = document.createElement('a');
+                        element.textContent = item.text;
+                        element.href = item.url;
+                        
+                        if (item.action === 'download') {
+                            element.setAttribute('download', true);
+                            element.classList.add('download-link');
+                        } else if (item.action === 'open') {
+                            element.setAttribute('target', '_blank');
+                            element.classList.add('paypal-button'); 
+                        }
+                    }
+                    if (element) contentArea.appendChild(element);
+                });
+
+                // 5. Build Language Switcher
+                const langSwitcher = document.getElementById('lang-switcher');
+                langSwitcher.innerHTML = settings.supportedLanguages.map(lang => {
+                    const newUrl = `${window.location.pathname}?lang=${lang}`;
+                    return `<a href="${newUrl}" style="margin: 0 10px; font-weight: ${lang === currentLang ? 'bold' : 'normal'}">${lang.toUpperCase()}</a>`;
+                }).join('');
+
+
+            } catch (error) {
+                console.error("Error loading chapter content:", error);
+                document.getElementById('page-title-main').textContent = "Error Loading Content. Check content.json.";
+            }
+        }
+        
+        // --- 2. Theme Logic ---
+        function applySystemTheme() {
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            body.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+        }
+
+        // --- 3. Run on Load ---
+        document.addEventListener('DOMContentLoaded', () => {
+            loadContent();
+            applySystemTheme();
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applySystemTheme);
+        });
     </script>
 </body>
 </html>

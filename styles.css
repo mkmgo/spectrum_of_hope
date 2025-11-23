@@ -1,138 +1,176 @@
-/* 1. Reset and Global Styles */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+:root {
+    /* --- Default Light Mode Variables --- */
+    --bg-color: #f4f4f4;
+    --text-color: #333333;
+    --block-bg: #ffffff;
+    --border-color: #cccccc;
+    --accent-color: #007bff; /* Primary link/highlight color */
 }
 
+body[data-theme="dark"] {
+    /* --- Dark Mode Overrides --- */
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --block-bg: #1e1e1e;
+    --border-color: #333333;
+    --accent-color: #4a90e2; /* Brighter blue for dark contrast */
+}
+
+/* --- Global Base Styles --- */
 body {
-    /* Base font size */
-    font-family: sans-serif;
+    font-family: Arial, sans-serif;
     line-height: 1.6;
-    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
     transition: background-color 0.3s, color 0.3s;
 }
 
-/* 2. Custom Properties (Variables) for Theming */
-
-/* --- Light Mode (Default) --- */
-body[data-theme="light"] {
-    --bg-color: #f8f9fa; /* Very light gray/off-white */
-    --text-color: #212529; /* Dark gray/black */
-    --accent-color: #007bff; /* Blue */
-    --block-bg: #ffffff; /* White block background */
-    --border-color: #e9ecef;
-}
-
-/* --- Dark Mode --- */
-body[data-theme="dark"] {
-    --bg-color: #212529; /* Dark gray */
-    --text-color: #f8f9fa; /* Light gray/off-white */
-    --accent-color: #00bfff; /* Sky Blue */
-    --block-bg: #343a40; /* Slightly darker block background */
-    --border-color: #495057;
-}
-
-/* Apply variables to the body */
-body {
-    background-color: var(--bg-color);
+h1, h2, h3 {
     color: var(--text-color);
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
 }
 
-/* 3. Layout: Flexbox for Responsiveness */
+a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: color 0.3s;
+}
 
+a:hover {
+    color: var(--accent-color);
+    text-decoration: underline;
+}
+
+/* --- Container and Layout --- */
 .story-container {
-    max-width: 1200px;
-    margin: 40px auto;
-    padding: 0 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
-.story-block {
-    display: flex; /* Activate Flexbox */
-    flex-direction: column; /* Default: Stack vertically on small screens */
-    gap: 30px; /* Space between media and text */
-    padding: 30px;
+/* --- Language Switcher --- */
+.language-switcher {
+    text-align: right;
+    padding: 10px 20px;
     background-color: var(--block-bg);
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
 }
 
-/* --- Media Query for Desktop/Tablet (Flexible Flow) --- */
-@media (min-width: 768px) {
-    .story-block {
-        flex-direction: row; /* On wider screens, place side-by-side */
-    }
-
-    .story-media, .story-text {
-        /* Distribute space: media takes 40%, text takes 60% */
-        flex: 1; 
-        min-width: 0; /* Prevents overflow issues */
-    }
-    
-    .story-media {
-        flex-basis: 40%;
-    }
-
-    .story-text {
-        flex-basis: 60%;
-    }
+/* --- Story Block (Chapter Page Layout) --- */
+.story-block {
+    display: flex;
+    flex-direction: column; /* Stacked by default */
+    padding: 20px;
 }
 
-/* 4. Media and Text Specific Styles */
+.story-media {
+    flex-grow: 1;
+    margin: 0 0 20px 0;
+    padding: 0;
+}
 
 .story-media img {
     width: 100%;
     height: auto;
     display: block;
-    border-radius: 4px;
+    border-radius: 8px;
 }
 
 .story-media figcaption {
-    font-size: 0.85em;
-    color: var(--text-color); /* Inherits theme color */
+    font-style: italic;
+    font-size: 0.9em;
+    color: var(--text-color);
     opacity: 0.7;
-    margin-top: 8px;
+    margin-top: 5px;
+    text-align: left;
 }
 
-.story-text h1 {
-    font-size: 2em;
-    margin-bottom: 0.5em;
-    color: var(--accent-color);
+.story-text {
+    flex-grow: 2;
 }
 
-.story-intro {
-    font-size: 1.15em;
-    font-weight: bold;
-    margin-bottom: 1em;
-}
-
-/* 5. Theme Toggle Button Styling (Optional) */
-
-#theme-toggle {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 10px 15px;
-    background-color: var(--accent-color);
-    color: var(--block-bg); 
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    z-index: 100;
-}
-.paypal-button {
+/* --- Nav Button Styles (PayPal, Download) --- */
+.paypal-button, .download-link {
     display: inline-block;
-    background-color: var(--accent-color); /* Uses your theme's main color */
-    color: var(--block-bg); /* Use the block background color for text contrast */
+    background-color: var(--accent-color); 
+    color: var(--block-bg); 
     padding: 10px 25px;
-    margin-top: 15px;
+    margin: 15px 10px 15px 0;
     text-decoration: none;
     font-weight: bold;
     border-radius: 5px;
     transition: background-color 0.3s;
 }
 
-.paypal-button:hover {
-    background-color: #0056b3; /* Slightly darker shade on hover (adjust for dark mode) */
+.paypal-button:hover, .download-link:hover {
+    background-color: #0056b3; /* Slightly darker shade */
+}
+
+/* --- Responsive Layout (Side-by-Side on Desktop) --- */
+@media (min-width: 768px) {
+    .story-block {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 30px;
+    }
+    .story-media {
+        /* JS sets flex-basis percentage here */
+        margin: 0;
+    }
+}
+
+/* --- INDEX PAGE SPECIFIC STYLING (Left Alignment & Appeal) --- */
+.index-page .story-text {
+    text-align: left; 
+    padding-top: 40px;
+}
+
+.index-page h1 {
+    font-size: 2.5em;
+    margin-bottom: 0.2em;
+    color: var(--accent-color);
+    text-align: left;
+}
+
+.index-page .story-intro {
+    font-size: 1.1em;
+    margin-top: 10px;
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+.index-page .campaign-nav ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+    gap: 20px;
+    justify-content: center;
+}
+
+.index-page .campaign-nav a {
+    display: block;
+    padding: 20px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    transition: all 0.3s;
+    background-color: var(--block-bg);
+    color: var(--text-color);
+    text-align: left;
+}
+
+.index-page .campaign-nav a:hover {
+    border-color: var(--accent-color);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.index-page .campaign-nav h2 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-size: 1.4em;
+    color: var(--accent-color);
 }
