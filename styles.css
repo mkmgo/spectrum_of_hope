@@ -29,10 +29,18 @@ body {
     transition: background-color 0.3s, color 0.3s;
 }
 
+/* --- Global Headline Styling --- */
 h1, h2, h3 {
-    color: var(--text-color);
     margin-top: 1.5em;
     margin-bottom: 0.5em;
+    /* Base color is the theme's text color */
+    color: var(--text-color); 
+}
+
+/* Specific rule for ALL main story headlines (H1) and sub-headlines (H2, H3) */
+/* We apply the accent color to ensure they stand out across all pages. */
+h1, .story-text h2, .story-text h3 {
+    color: var(--accent-color);
 }
 
 a {
