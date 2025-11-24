@@ -15,7 +15,7 @@ body[data-theme="dark"] {
     --block-bg: #1e1e1e;        /* Content block background (darker gray) */
     --border-color: #333333;
     --accent-color: #4a90e2;
-    --soft-image-bg: #282828;   /* Slightly darker background for transparent images */
+    --soft-image-bg: #3c3c3c;  /* Slightly darker background for transparent images */
 }
 
 /* --- Global Base Styles --- */
