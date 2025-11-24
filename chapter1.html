@@ -83,7 +83,13 @@
                 const imgContainer = document.getElementById('image-container');
                 const imgData = pageData.image;
 
-                if (imgData) {
+        if (imgData) {
+        // This logic MUST execute successfully
+            if (imgData.use_soft_bg) { 
+                imgContainer.classList.add('soft-background-image');
+            } else {
+                imgContainer.classList.remove('soft-background-image');
+            }
                     // FIX: Flexible replacement for JPG or PNG
                     const webpUrl = imgData.url.replace(/\.(jpe?g|png)$/i, '.webp'); 
 
