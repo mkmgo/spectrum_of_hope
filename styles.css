@@ -7,7 +7,6 @@
     --accent-color: #007bff;
     --soft-image-bg: #fbfbfb;   /* Very light background for transparent images */
 }
-}
 
 body[data-theme="dark"] {
     /* --- Dark Mode Overrides --- */
@@ -118,7 +117,6 @@ a:hover {
     height: auto;
     display: block;
     border-radius: 8px;
-    border: none; /* or border: 1px solid transparent; */
 }
 
 .story-media figcaption {
