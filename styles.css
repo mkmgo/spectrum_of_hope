@@ -105,16 +105,18 @@ a:hover {
 
 /* --- Image Styling --- */
 
+/* Update the .story-media block in styles.css */
 .story-media {
-    flex-grow: 1;
+    flex-grow: 0;       /* IMPORTANT: Don't allow it to grow beyond its base size */
+    flex-shrink: 0;     /* IMPORTANT: Don't allow it to shrink if text is long */
     margin: 0 0 20px 0;
     padding: 0;
-    width: 100%; 
+    width: 100%;
 }
 
 .story-media img {
     width: 100%;
-    height: auto;
+    height: auto; /* Maintains the image's aspect ratio */
     display: block;
     border-radius: 8px;
 }
