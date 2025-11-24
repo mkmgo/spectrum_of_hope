@@ -6,7 +6,6 @@
     --border-color: #cccccc;
     --accent-color: #007bff;
     --soft-image-bg: #fbfbfb;   /* Very light background for transparent images */
-    --soft-image-bg: #fbfbfb; /* Very light gray/off-white for light mode */
 }
 }
 
@@ -18,7 +17,6 @@ body[data-theme="dark"] {
     --border-color: #333333;
     --accent-color: #4a90e2;
     --soft-image-bg: #282828;   /* Slightly darker background for transparent images */
-    --soft-image-bg: #282828; /* Slightly darker than block-bg for dark mode contrast */
 }
 
 /* --- Global Base Styles --- */
