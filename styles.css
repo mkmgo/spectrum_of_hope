@@ -36,7 +36,7 @@ h1, h2, h3 {
     color: var(--text-color); 
 }
 
-/* FIX: Apply accent color to all main story headlines (H1) and sub-headlines (H2, H3) */
+/* Apply accent color to all main story headlines (H1) and sub-headlines (H2, H3) */
 h1, .story-text h2, .story-text h3 {
     color: var(--accent-color);
 }
