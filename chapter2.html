@@ -24,7 +24,7 @@
         let currentLang = localStorage.getItem('lang') || 'en';
 
         async function loadContent(pageId) {
-            const response = await fetch('content.json');
+            const response = await fetch('./content.json');
             contentData = await response.json();
             
             // Get the data block for the current language and page
