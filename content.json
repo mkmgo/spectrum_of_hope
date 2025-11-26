@@ -17,7 +17,7 @@
         "url": "https://res.cloudinary.com/dqwm4pdbz/image/upload/v1763998481/Spectrum_of_Hope_ch4aic.jpg",
         "size_percentage": 50,
         "caption": "A beautiful mind",
-        "use_soft_bg": false
+        "use_soft_bg": false 
       },
       "chapters": [
         {
@@ -41,7 +41,7 @@
         "url": "https://res.cloudinary.com/dqwm4pdbz/image/upload/v1764176938/Spectrum_of_Hope_4_vblw7s.jpg",
         "size_percentage": 50,
         "caption": "The first visual illustrating the core concept.",
-        "use_soft_bg": false
+        "use_soft_bg": false 
       },
       "content": [
         {
@@ -77,7 +77,7 @@
         "url": "https://res.cloudinary.com/dqwm4pdbz/image/upload/v1764177418/Spectrum_of_Hope_3_dtj9rl.jpg",
         "size_percentage": 50,
         "caption": "Statistics showing our primary results.",
-        "use_soft_bg": false
+        "use_soft_bg": false 
       },
       "content": [
         {
