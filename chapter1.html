@@ -149,6 +149,13 @@
                 loadContent(pageId);
             }
         }
+        
+        // 🛑 CRITICAL FIX: Initializes content loading AFTER the page is ready.
+        document.addEventListener('DOMContentLoaded', () => {
+            const pageId = document.body.dataset.pageId;
+            loadContent(pageId);
+        });
+
     </script>
 </head>
 <body data-page-id="chapter1">
