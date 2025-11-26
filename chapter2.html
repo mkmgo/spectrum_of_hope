@@ -24,46 +24,63 @@
         let currentLang = localStorage.getItem('lang') || 'en';
 
         async function loadContent(pageId) {
-            const response = await fetch('./content.json');
-            contentData = await response.json();
+            try {
+                // CRITICAL: Robust path to fetch the JSON file
+                const response = await fetch('./content.json');
+                contentData = await response.json();
+            } catch (error) {
+                console.error("Fatal Error: Could not fetch or parse content.json", error);
+                document.getElementById('page-title').textContent = "Error Loading Content";
+                return;
+            }
             
             // Get the data block for the current language and page
             const langData = contentData[currentLang];
-            if (!langData) return;
+            if (!langData) {
+                 console.error(`Language data for ${currentLang} not found.`);
+                 return;
+            }
+            
             const pageData = langData[pageId];
-            if (!pageData) return;
+            if (!pageData) {
+                console.error(`Page data for ${pageId} not found in language ${currentLang}.`);
+                return;
+            }
 
             // 1. Set Page Title
-            document.getElementById('page-title').textContent = pageData.title;
+            const pageTitleElement = document.getElementById('page-title');
+            if (pageTitleElement) pageTitleElement.textContent = pageData.title;
 
             // 2. Inject Sequential Navigation Links
             const navTop = document.getElementById('chapter-nav-top');
-            let navHTML = '';
-            
-            // Previous Link
-            if (pageData.prev_story_link) {
-                navHTML += `<a href="${pageData.prev_story_link}" class="nav-prev">← Previous</a> | `;
-            } else {
-                navHTML += `<span class="nav-placeholder"></span> | `;
-            }
-            
-            // Home Link
-            navHTML += `<a href="${langData.index.page_url}" class="nav-home">Home</a> | `;
+            if (navTop) {
+                let navHTML = '';
+                
+                // Previous Link
+                if (pageData.prev_story_link) {
+                    navHTML += `<a href="${pageData.prev_story_link}" class="nav-prev">← Previous</a> | `;
+                } else {
+                    navHTML += `<span class="nav-placeholder"></span> | `;
+                }
+                
+                // Home Link
+                navHTML += `<a href="${langData.index.page_url}" class="nav-home">Home</a> | `;
 
-            // Next Link
-            if (pageData.next_story_link) {
-                navHTML += `<a href="${pageData.next_story_link}" class="nav-next">Next →</a>`;
-            } else {
-                navHTML += `<span class="nav-placeholder"></span>`;
-            }
+                // Next Link
+                if (pageData.next_story_link) {
+                    navHTML += `<a href="${pageData.next_story_link}" class="nav-next">Next →</a>`;
+                } else {
+                    navHTML += `<span class="nav-placeholder"></span>`;
+                }
 
-            navTop.innerHTML = navHTML;
+                navTop.innerHTML = navHTML;
+            }
 
             // 3. Inject Image and Caption
             const imgContainer = document.getElementById('image-container');
             const imgData = pageData.image;
 
-            if (imgData) {
+            if (imgContainer && imgData) {
                 // Conditional soft background logic
                 if (imgData.use_soft_bg) { 
                     imgContainer.classList.add('soft-background-image');
@@ -89,28 +106,30 @@
                 
                 // Set the image's width relative to the text using flex-basis (for desktop)
                 imgContainer.style.flexBasis = imgData.size_percentage + '%'; 
-            } else {
+            } else if (imgContainer) {
                 imgContainer.style.display = 'none';
             }
 
             // 4. Inject Content Blocks
             const storyText = document.getElementById('story-text-content');
-            storyText.innerHTML = `<h1>${pageData.title}</h1>`;
+            if (storyText) {
+                storyText.innerHTML = `<h1>${pageData.title}</h1>`;
 
-            pageData.content.forEach(block => {
-                let htmlBlock = '';
-                if (block.type === 'headline') {
-                    htmlBlock = `<h2>${block.text}</h2>`;
-                } else if (block.type === 'text') {
-                    htmlBlock = `<p>${block.text}</p>`;
-                } else if (block.type === 'link') {
-                    const actionClass = block.action === 'download' ? 'download-link' : 'paypal-button';
-                    htmlBlock = `<a href="${block.url}" class="${actionClass}" target="_blank">${block.text}</a>`;
-                }
-                storyText.innerHTML += htmlBlock;
-            });
+                pageData.content.forEach(block => {
+                    let htmlBlock = '';
+                    if (block.type === 'headline') {
+                        htmlBlock = `<h2>${block.text}</h2>`;
+                    } else if (block.type === 'text') {
+                        htmlBlock = `<p>${block.text}</p>`;
+                    } else if (block.type === 'link') {
+                        const actionClass = block.action === 'download' ? 'download-link' : 'paypal-button';
+                        htmlBlock = `<a href="${block.url}" class="${actionClass}" target="_blank">${block.text}</a>`;
+                    }
+                    storyText.innerHTML += htmlBlock;
+                });
+            }
             
-            // Set active language button
+            // 5. Set active language button
             document.querySelectorAll('.lang-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.lang === currentLang);
             });
@@ -121,3 +140,34 @@
                 localStorage.setItem('lang', newLang);
                 currentLang = newLang;
                 // Reload content for the current page
+                const pageId = document.body.dataset.pageId;
+                loadContent(pageId);
+            }
+        }
+    </script>
+</head>
+<body data-page-id="chapter2" onload="loadContent(this.dataset.pageId)">
+    
+    <div class="language-switcher">
+        <button onclick="toggleTheme()">☀️ / 🌙</button>
+        <button class="lang-btn" data-lang="en" onclick="switchLanguage('en')">EN</button>
+        <button class="lang-btn" data-lang="de" onclick="switchLanguage('de')">DE</button>
+    </div>
+
+    <div class="story-container">
+        
+        <div id="chapter-nav-top"></div>
+
+        <div class="story-block">
+            
+            <figure class="story-media" id="image-container">
+                </figure>
+            
+            <div class="story-text" id="story-text-content">
+                </div>
+            
+        </div>
+    </div>
+
+</body>
+</html>
