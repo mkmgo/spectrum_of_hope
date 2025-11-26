@@ -121,34 +121,3 @@
                 localStorage.setItem('lang', newLang);
                 currentLang = newLang;
                 // Reload content for the current page
-                const pageId = document.body.dataset.pageId;
-                loadContent(pageId);
-            }
-        }
-    </script>
-</head>
-<body data-page-id="chapter2" onload="loadContent(this.dataset.pageId)">
-    
-    <div class="language-switcher">
-        <button onclick="toggleTheme()">☀️ / 🌙</button>
-        <button class="lang-btn" data-lang="en" onclick="switchLanguage('en')">EN</button>
-        <button class="lang-btn" data-lang="de" onclick="switchLanguage('de')">DE</button>
-    </div>
-
-    <div class="story-container">
-        
-        <div id="chapter-nav-top"></div>
-
-        <div class="story-block">
-            
-            <figure class="story-media" id="image-container">
-                </figure>
-            
-            <div class="story-text" id="story-text-content">
-                </div>
-            
-        </div>
-    </div>
-
-</body>
-</html>
