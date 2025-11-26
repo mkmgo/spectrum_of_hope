@@ -3,121 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">Loading Campaign Index...</title>
-    <link rel="stylesheet" href="styles.css"> 
-</head>
-<body data-theme="light">
-    
-    <nav class="language-switcher" id="lang-switcher"></nav>
-
-    <main class="story-container index-page">
-        
-        <section class="story-text"> 
-            
-            <figure class="index-media" id="image-container"></figure>
-            <h1 id="main-headline">Loading...</h1>
-            <p class="story-intro" id="intro-text">Loading...</p>
-            
-        </section>
-        
-        <nav class="campaign-nav">
-            <ul id="chapter-list"> 
-                </ul>
-        </nav>
-        
-        <div class="call-to-action">
-             <a href="#" target="_blank" class="paypal-button">Support Our Mission</a>
-        </div>
-
-    </main>
-
+    <title id="page-title">Loading...</title>
+    <link rel="stylesheet" href="styles.css">
     <script>
-        const body = document.body;
-        let currentLang = 'en';
+        // --- Theme Management (SHARED) ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.body.setAttribute('data-theme', currentTheme);
+        });
 
-        // --- Function to get the current language from the URL ---
-        function getLang() {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get('lang') || 'en'; 
+        function toggleTheme() {
+            const currentTheme = document.body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            document.body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
         }
 
-        // --- 1. Content Loading Function ---
-        async function loadContent() {
-            currentLang = getLang();
+        // --- Content & Language Loading (INDEX SPECIFIC) ---
+        let contentData = {};
+        let currentLang = localStorage.getItem('lang') || 'en';
+        const PAGE_ID = "index"; // Fixed ID for this page
 
+        async function loadIndexContent() {
             try {
-                const response = await fetch('content.json');
-                const data = await response.json();
-                const pageData = data[currentLang]['index'];
-                const settings = data.settings;
-
-                // 1. Update Main Text
-                document.getElementById('page-title').textContent = pageData.title;
-                document.getElementById('main-headline').textContent = pageData.title;
-                document.getElementById('intro-text').textContent = pageData.intro;
-
-                // 2. Build Chapter List
-                const chapterList = document.getElementById('chapter-list');
-                chapterList.innerHTML = ''; 
-                
-                pageData.chapters.forEach(chapter => {
-                    const li = document.createElement('li');
-                    const a = document.createElement('a');
-                    
-                    // Set the link target, maintaining the current language
-                    a.href = `${chapter.id}.html?lang=${currentLang}`;
-                    a.innerHTML = `
-                        <h2>${chapter.title}</h2>
-                        <p>${chapter.description}</p>
-                    `;
-                    li.appendChild(a);
-                    chapterList.appendChild(li);
-                });
-
-                // 3. Inject Image (The image will always fill the 100% container width)
-                const imgContainer = document.getElementById('image-container');
-                const imgData = pageData.image;
-
-                if (imgData) {
-                    const webpUrl = imgData.url.replace(/\.(jpe?g|png)$/i, '.webp'); 
-                    
-                    const imgHTML = `
-                        <picture>
-                            <source srcset="${webpUrl}" type="image/webp">
-                            <img src="${imgData.url}" alt="${imgData.caption}" style="width: 100%; height: auto; border-radius: 8px;">
-                        </picture>
-                        <figcaption>${imgData.caption}</figcaption>
-                    `;
-                    imgContainer.innerHTML = imgHTML;
-                } else {
-                    imgContainer.style.display = 'none';
-                }
-
-                // 4. Build Language Switcher
-                const langSwitcher = document.getElementById('lang-switcher');
-                langSwitcher.innerHTML = settings.supportedLanguages.map(lang => {
-                    const newUrl = `${window.location.pathname}?lang=${lang}`;
-                    return `<a href="${newUrl}" style="margin: 0 10px; font-weight: ${lang === currentLang ? 'bold' : 'normal'}">${lang.toUpperCase()}</a>`;
-                }).join('');
-
+                const response = await fetch('./content.json');
+                contentData = await response.json();
             } catch (error) {
-                console.error("Error loading index content:", error);
-                document.getElementById('main-headline').textContent = "Error Loading Content. Check content.json.";
+                console.error("Fatal Error: Could not fetch or parse content.json", error);
+                document.getElementById('page-title').textContent = "Error Loading Content";
+                return;
+            }
+            
+            // Call the shared content injection function
+            injectIndexContent(currentLang);
+        }
+
+        function injectIndexContent(lang) {
+            const langData = contentData[lang];
+            if (!langData) return;
+            
+            const pageData = langData[PAGE_ID];
+            if (!pageData) return;
+
+            // 1. Set Page Title
+            const pageTitleElement = document.getElementById('page-title');
+            if (pageTitleElement) pageTitleElement.textContent = pageData.title;
+            
+            // 2. Inject Language Buttons (If you decide to add them back later)
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+            });
+
+            // 3. Inject Image, Caption, and Set Size
+            const imgContainer = document.getElementById('image-container');
+            const imgData = pageData.image;
+
+            if (imgContainer && imgData) {
+                // Conditional soft background logic
+                if (imgData.use_soft_bg) { 
+                    imgContainer.classList.add('soft-background-image');
+                } else {
+                    imgContainer.classList.remove('soft-background-image');
+                }
+                
+                const webpUrl = imgData.url.replace(/\.(jpe?g|png)$/i, '.webp'); 
+
+                const imgHTML = `
+                    <picture>
+                        <source srcset="${webpUrl}" type="image/webp">
+                        <img 
+                            src="${imgData.url}" 
+                            alt="${imgData.caption}" 
+                            style="width: 100%;" 
+                        >
+                    </picture>
+                    <figcaption>${imgData.caption}</figcaption>
+                `;
+                imgContainer.innerHTML = imgHTML;
+                
+                // 🛑 CRITICAL FIX: Set the image's width relative to the text using flex-basis 
+                imgContainer.style.flexBasis = imgData.size_percentage + '%'; 
+            } else if (imgContainer) {
+                imgContainer.style.display = 'none';
+            }
+
+            // 4. Inject Intro Text
+            const introElement = document.getElementById('story-intro');
+            if (introElement) introElement.innerHTML = `<p>${pageData.intro}</p>`;
+
+            // 5. Inject Chapter Navigation List
+            const navList = document.getElementById('chapters-list');
+            if (navList) {
+                navList.innerHTML = pageData.chapters.map(chapter => {
+                    const chapterData = langData[chapter.id];
+                    return `
+                        <li>
+                            <a href="${chapterData.page_url}">
+                                <h2>${chapter.title}</h2>
+                                <p>${chapter.description}</p>
+                            </a>
+                        </li>
+                    `;
+                }).join('');
             }
         }
-        
-        // --- 2. Theme Logic ---
-        function applySystemTheme() {
-            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-            body.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+
+        function switchLanguage(newLang) {
+            if (contentData[newLang]) {
+                localStorage.setItem('lang', newLang);
+                currentLang = newLang;
+                // Reload content for the index page
+                injectIndexContent(newLang);
+            }
         }
 
-        // --- 3. Run on Load ---
-        document.addEventListener('DOMContentLoaded', () => {
-            loadContent();
-            applySystemTheme();
-            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applySystemTheme);
-        });
+        // 🛑 Initialization: Start content loading
+        document.addEventListener('DOMContentLoaded', loadIndexContent);
+
     </script>
+</head>
+<body data-page-id="index" class="index-page">
+    
+    <div class="story-container">
+        
+        <div class="story-block">
+            
+            <div class="story-text" id="story-text-content">
+                <h1 id="main-title"></h1>
+                <div id="story-intro" class="story-intro"></div>
+
+                <nav class="campaign-nav">
+                    <ul id="chapters-list">
+                        </ul>
+                </nav>
+            </div>
+
+            <figure class="story-media index-media" id="image-container">
+                </figure>
+            
+        </div>
+    </div>
+
 </body>
 </html>
