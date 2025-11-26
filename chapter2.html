@@ -64,7 +64,12 @@
                 }
                 
                 // Home Link
-                navHTML += `<a href="${langData.index.page_url}" class="nav-home">Home</a> | `;
+                if(langData.index && langData.index.page_url) {
+                    navHTML += `<a href="${langData.index.page_url}" class="nav-home">Home</a> | `;
+                } else {
+                    navHTML += `<span class="nav-placeholder"></span> | `;
+                }
+
 
                 // Next Link
                 if (pageData.next_story_link) {
@@ -144,9 +149,16 @@
                 loadContent(pageId);
             }
         }
+        
+        // 🛑 CRITICAL FIX: Initializes content loading AFTER the page is ready.
+        document.addEventListener('DOMContentLoaded', () => {
+            const pageId = document.body.dataset.pageId;
+            loadContent(pageId);
+        });
+
     </script>
 </head>
-<body data-page-id="chapter1">
+<body data-page-id="chapter2">
     
     <div class="language-switcher">
         <button onclick="toggleTheme()">☀️ / 🌙</button>
