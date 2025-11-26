@@ -189,14 +189,17 @@ a:hover {
 
 /* --- INDEX PAGE SPECIFIC STYLING --- */
 .index-page .story-text {
-    /* Overrides for index page: text is part of the overall background */
-    background-color: initial; 
-    padding: initial;
-    border-radius: initial;
-    box-shadow: initial;
-    border: initial;
+    /* DELETE THESE: */
+    /* background-color: initial; */ 
+    /* padding: initial; */
+    /* border-radius: initial; */
+    /* box-shadow: initial; */
+    /* border: initial; */
+    
     text-align: left; 
-    padding-top: 40px;
+    
+    /* DELETE THIS: */
+    /* padding-top: 40px; */ 
 }
 
 .index-page h1 {
