@@ -59,7 +59,7 @@ a:hover {
     padding: 20px;
 }
 
-/* --- Language Switcher --- */
+/* --- Language Switcher (Removed, but styles kept in case you put it back) --- */
 .language-switcher {
     text-align: right;
     padding: 10px 20px;
@@ -71,7 +71,7 @@ a:hover {
 
 .story-block {
     display: flex;
-    flex-direction: column; 
+    flex-direction: column; /* CRITICAL: Ensures stacking on mobile */
     padding: 20px 0;
 }
 
@@ -83,6 +83,7 @@ a:hover {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     border: 1px solid var(--border-color);
     flex-grow: 2;
+    order: 2; /* 🛑 FIX: Text always comes AFTER the image 🛑 */
 }
 
 /* Sequential Navigation Style */
@@ -108,8 +109,7 @@ a:hover {
     margin: 0 0 20px 0;
     padding: 0;
     width: 100%; /* Remains 100% width on mobile */
-    order: 1;
-
+    order: 1; /* 🛑 FIX: Image always comes FIRST 🛑 */
 }
 
 .story-media img {
@@ -169,14 +169,27 @@ a:hover {
 
     .story-text {
         flex-grow: 1;
-        /* FIX: Prevents the text block from collapsing, stabilizing the entire row */
+        /* Default min-width for chapter pages */
         min-width: 450px; 
-        order: 2;
+    }
+    
+    /* --- INDEX PAGE SPECIFIC OVERRIDES (Fixes Image Percentage) --- */
+    .index-page .story-text {
+        min-width: initial; /* 🛑 CRITICAL FIX: Resets the fixed width constraint for percentage sizing */
+        flex-basis: auto;   /* Ensures text takes the remaining space */
+        flex-grow: 1;
+    }
+
+    /* We also make sure the image container itself is free to take the size set by JS */
+    .index-page .story-media {
+        flex-grow: 0;
+        flex-shrink: 0;
     }
 }
 
 /* --- INDEX PAGE SPECIFIC STYLING --- */
 .index-page .story-text {
+    /* Overrides for index page: text is part of the overall background */
     background-color: initial; 
     padding: initial;
     border-radius: initial;
