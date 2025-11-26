@@ -15,7 +15,7 @@ body[data-theme="dark"] {
     --block-bg: #1e1e1e;        /* Content block background (darker gray) */
     --border-color: #333333;
     --accent-color: #4a90e2;    /* Lighter blue for dark contrast */
-    --soft-image-bg: #3c3c3c;   /* Contrast background for transparent images */
+    --soft-image-bg: #2c2c2c;   /* Contrast background for transparent images */
 }
 
 /* --- Global Base Styles --- */
@@ -29,14 +29,14 @@ body {
     transition: background-color 0.3s, color 0.3s;
 }
 
-/* --- Global Headline Styling (FIXED: Blue H2/H3 for chapters) --- */
+/* --- Global Headline Styling --- */
 h1, h2, h3 {
     margin-top: 1.5em;
     margin-bottom: 0.5em;
     color: var(--text-color); 
 }
 
-/* Apply accent color to all main story headlines (H1) and sub-headlines (H2, H3) */
+/* FIX: Apply accent color to all main story headlines (H1) and sub-headlines (H2, H3) */
 h1, .story-text h2, .story-text h3 {
     color: var(--accent-color);
 }
@@ -76,7 +76,7 @@ a:hover {
 }
 
 .story-block .story-text {
-    /* CRUCIAL FIX: Apply block background for contrast */
+    /* CRUCIAL: Apply block background for contrast */
     background-color: var(--block-bg); 
     padding: 30px; 
     border-radius: 8px; 
@@ -103,10 +103,11 @@ a:hover {
 
 /* --- Image Styling --- */
 .story-media {
-    flex-grow: 1;
+    /* Use flex shorthand for strict behavior on mobile */
+    flex: 0 0 auto; 
     margin: 0 0 20px 0;
     padding: 0;
-    width: 100%; 
+    width: 100%; /* Remains 100% width on mobile */
 }
 
 .story-media img {
@@ -159,16 +160,15 @@ a:hover {
     }
     
     .story-media {
-        /* CRITICAL FIXES: Forces image container to adhere strictly to its percentage width */
-        flex-grow: 0;       
-        flex-shrink: 0;     
+        /* FIX: 'flex: 0 0 auto' means: use the width set by JS (flex-basis), and DO NOT GROW OR SHRINK */
+        flex: 0 0 auto; 
         margin: 0;
     }
 
     .story-text {
         flex-grow: 1;
-        /* CRITICAL FIX: Prevents the text block from collapsing too much */
-        min-width: 350px; 
+        /* FIX: Prevents the text block from collapsing, stabilizing the entire row */
+        min-width: 450px; 
     }
 }
 
@@ -204,4 +204,38 @@ a:hover {
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
     gap: 20px;
     justify-content: center;
+}
+
+.index-page .campaign-nav a {
+    display: block;
+    padding: 20px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    transition: all 0.3s;
+    background-color: var(--block-bg);
+    color: var(--text-color);
+    text-align: left;
+}
+
+.index-page .campaign-nav a:hover {
+    border-color: var(--accent-color);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.index-page .campaign-nav h2 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-size: 1.4em;
+    color: var(--accent-color);
+}
+
+.index-page .campaign-nav p {
+    font-size: 0.9em;
+    opacity: 0.8;
+}
+
+.index-page .index-media {
+    margin-bottom: 30px;
+    width: 100%; 
 }
