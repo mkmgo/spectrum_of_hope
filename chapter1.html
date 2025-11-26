@@ -3,169 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">Loading Chapter...</title>
-    <link rel="stylesheet" href="styles.css"> 
-</head>
-<body data-theme="light">
-    
-    <nav class="language-switcher" id="lang-switcher"></nav>
-
-    <main class="story-container">
-        <article class="story-block">
-            
-            <nav id="chapter-nav-top">
-                <a id="prev-story-link" href="#">← Previous</a> |
-                <a id="home-link" href="#">Home</a> |
-                <a id="next-story-link" href="#">Next →</a>
-            </nav>
-            
-            <figure class="story-media" id="image-container"></figure>
-
-            <section class="story-text">
-                <h1 id="page-title-main">Loading...</h1>
-                <div id="content-area"></div> 
-            </section>
-
-        </article>
-    </main>
-
+    <title id="page-title">Loading...</title>
+    <link rel="stylesheet" href="styles.css">
     <script>
-        const body = document.body;
-        let currentLang = 'en';
-
-        function getLang() {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get('lang') || 'en'; 
-        }
-        
-        function getPageId() {
-            const path = window.location.pathname;
-            const filename = path.substring(path.lastIndexOf('/') + 1);
-            return filename.split('.')[0]; // e.g., 'chapter1'
-        }
-        
-        // --- 1. Content Loading Function ---
-        async function loadContent() {
-            currentLang = getLang();
-            const pageId = getPageId();
-
-            try {
-                const response = await fetch('content.json');
-                const data = await response.json();
-                const pageData = data[currentLang][pageId];
-                const settings = data.settings;
-                
-                if (!pageData) throw new Error("Content not found for this page/language.");
-
-                // 1. Update Title and Nav
-                document.getElementById('page-title').textContent = pageData.title;
-                document.getElementById('page-title-main').textContent = pageData.title;
-                
-                // 2. Set Navigation Links
-                const homeLinkUrl = `${data[currentLang]['index'].page_url}?lang=${currentLang}`;
-                document.getElementById('home-link').href = homeLinkUrl;
-                
-                // Previous Link
-                const prevLink = document.getElementById('prev-story-link');
-                if (pageData.prev_story_link) {
-                    prevLink.href = `${pageData.prev_story_link}?lang=${currentLang}`;
-                    prevLink.style.display = 'inline';
-                } else { prevLink.style.display = 'none'; }
-                
-                // Next Link
-                const nextLink = document.getElementById('next-story-link');
-                if (pageData.next_story_link) {
-                    nextLink.href = `${pageData.next_story_link}?lang=${currentLang}`;
-                    nextLink.style.display = 'inline';
-                } else { nextLink.style.display = 'none'; }
-
-                // 3. Inject Image and Caption (Includes PNG/JPG to WebP fix)
-                const imgContainer = document.getElementById('image-container');
-                const imgData = pageData.image;
-
-        if (imgData) {
-        // This logic MUST execute successfully
-            if (imgData.use_soft_bg) { 
-                imgContainer.classList.add('soft-background-image');
-            } else {
-                imgContainer.classList.remove('soft-background-image');
-            }     
-                    // FIX: Flexible replacement for JPG or PNG
-                    const webpUrl = imgData.url.replace(/\.(jpe?g|png)$/i, '.webp'); 
-
-                    const imgHTML = `
-                        <picture>
-                            <source srcset="${webpUrl}" type="image/webp">
-                            <img 
-                                src="${imgData.url}" 
-                                alt="${imgData.caption}" 
-                                style="width: 100%;" 
-                            >
-                        </picture>
-                        <figcaption>${imgData.caption}</figcaption>
-                    `;
-                    imgContainer.innerHTML = imgHTML;
-                    
-                    // Set the image's width relative to the text using flex-basis (for desktop)
-                    imgContainer.style.flexBasis = imgData.size_percentage + '%'; 
-                } else {
-                    imgContainer.style.display = 'none';
-                }
-
-                // 4. Build Content Area (Headlines, Text, Links)
-                const contentArea = document.getElementById('content-area');
-                contentArea.innerHTML = '';
-                
-                pageData.content.forEach(item => {
-                    let element;
-                    if (item.type === 'headline') {
-                        element = document.createElement('h2');
-                        element.textContent = item.text;
-                    } else if (item.type === 'text') {
-                        element = document.createElement('p');
-                        element.textContent = item.text;
-                    } else if (item.type === 'link') {
-                        element = document.createElement('a');
-                        element.textContent = item.text;
-                        element.href = item.url;
-                        
-                        if (item.action === 'download') {
-                            element.setAttribute('download', true);
-                            element.classList.add('download-link');
-                        } else if (item.action === 'open') {
-                            element.setAttribute('target', '_blank');
-                            element.classList.add('paypal-button'); 
-                        }
-                    }
-                    if (element) contentArea.appendChild(element);
-                });
-
-                // 5. Build Language Switcher
-                const langSwitcher = document.getElementById('lang-switcher');
-                langSwitcher.innerHTML = settings.supportedLanguages.map(lang => {
-                    const newUrl = `${window.location.pathname}?lang=${lang}`;
-                    return `<a href="${newUrl}" style="margin: 0 10px; font-weight: ${lang === currentLang ? 'bold' : 'normal'}">${lang.toUpperCase()}</a>`;
-                }).join('');
-
-
-            } catch (error) {
-                console.error("Error loading chapter content:", error);
-                document.getElementById('page-title-main').textContent = "Error Loading Content. Check content.json.";
-            }
-        }
-        
-        // --- 2. Theme Logic ---
-        function applySystemTheme() {
-            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-            body.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
-        }
-
-        // --- 3. Run on Load ---
+        // --- Theme Management ---
         document.addEventListener('DOMContentLoaded', () => {
-            loadContent();
-            applySystemTheme();
-            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applySystemTheme);
+            const currentTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.body.setAttribute('data-theme', currentTheme);
         });
-    </script>
-</body>
-</html>
+
+        function toggleTheme() {
+            const currentTheme = document.body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            document.body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // --- Content & Language Loading ---
+        let contentData = {};
+        let currentLang = localStorage.getItem('lang') || 'en';
+
+        async function loadContent(pageId) {
+            const response = await fetch('content.json');
+            contentData = await response.json();
+            
+            // Get the data block for the current language and page
+            const langData = contentData[currentLang];
+            if (!langData) return;
+            const pageData = langData[pageId];
+            if (!pageData) return;
+
+            // 1. Set Page Title
+            document.getElementById('page-title').textContent = pageData.title;
+
+            // 2. Inject Sequential Navigation Links
+            const navTop = document.getElementById('chapter-nav-top');
+            let navHTML = '';
+            
+            // Previous Link
+            if (pageData.prev_story_link) {
+                navHTML += `<a href="${pageData.prev_story_link}" class="nav-prev">← Previous</a> | `;
+            } else {
+                navHTML += `<span class="nav-placeholder"></span> | `;
+            }
+            
+            // Home Link
+            navHTML += `<a href="${langData.index.page_url}" class="nav-home">Home</a> | `;
+
+            // Next Link
+            if (pageData.next_story_link) {
+                navHTML += `<a href="${pageData.next_story_link}" class="nav-next">Next →</a>`;
+            } else {
+                navHTML += `<span class="nav-placeholder"></span>`;
+            }
+
+            navTop.innerHTML = navHTML;
+
+            // 3. Inject Image and Caption
+            const imgContainer = document.getElementById('image-container');
+            const imgData = pageData.image;
+
+            if (imgData) {
+                // Conditional soft background logic
+                if (imgData.use_soft_bg) { 
+                    imgContainer.classList.add('soft-background-image');
+                } else {
+                    imgContainer.classList.remove('soft-background-image');
+                }
+                
+                // Flexible replacement for JPG or PNG to generate WebP URL
+                const webpUrl = imgData.url.replace(/\.(jpe?g|png)$/i, '.webp'); 
+
+                const imgHTML = `
+                    <picture>
+                        <source srcset="${webpUrl}" type="image/webp">
+                        <img 
+                            src="${imgData.url}" 
+                            alt="${imgData.caption}" 
+                            style="width: 100%;" 
+                        >
+                    </picture>
+                    <figcaption>${imgData.caption}</figcaption>
+                `;
+                imgContainer.innerHTML = imgHTML;
+                
+                // Set the image's width relative to the text using flex-basis (for desktop)
+                imgContainer.style.flexBasis = imgData.size_percentage + '%'; 
+            } else {
+                imgContainer.style.display = 'none';
+            }
+
+            // 4. Inject Content Blocks
+            const storyText = document.getElementById('story-text-content');
+            storyText.innerHTML = `<h1>${pageData.title}</h1>`;
+
+            pageData.content.forEach(block => {
+                let htmlBlock = '';
+                if (block.type === 'headline') {
+                    htmlBlock = `<h2>${block.text}</h2>`;
+                } else if (block.type === 'text') {
+                    htmlBlock = `<p>${block.text}</p>`;
+                } else if (block.type === 'link') {
+                    const actionClass = block.action === 'download' ? 'download-link' : 'paypal-button';
+                    htmlBlock = `<a href="${block.url}" class="${actionClass}" target="_blank">${block.text}</a>`;
+                }
+                storyText.innerHTML += htmlBlock;
+            });
+            
+            // Set active language button
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === currentLang);
+            });
+        }
+
+        function switchLanguage(newLang) {
+            if (contentData[newLang]) {
+                localStorage.setItem('lang', newLang);
+                currentLang = newLang;
+                // Reload content for the current page
