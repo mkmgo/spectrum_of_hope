@@ -16,7 +16,8 @@
       "image": {
         "url": "https://res.cloudinary.com/dqwm4pdbz/image/upload/v1763998481/Spectrum_of_Hope_ch4aic.jpg",
         "size_percentage": 50,
-        "caption": "A beautiful mind"
+        "caption": "A beautiful mind",
+        "use_soft_bg": false
       },
       "chapters": [
         {
@@ -38,8 +39,9 @@
       "next_story_link": "chapter2.html",
       "image": {
         "url": "https://res.cloudinary.com/dqwm4pdbz/image/upload/v1764176938/Spectrum_of_Hope_4_vblw7s.jpg",
-        "size_percentage": "5ß",
-        "caption": "The first visual illustrating the core concept."
+        "size_percentage": 50,
+        "caption": "The first visual illustrating the core concept.",
+        "use_soft_bg": false
       },
       "content": [
         {
@@ -74,7 +76,8 @@
       "image": {
         "url": "https://res.cloudinary.com/dqwm4pdbz/image/upload/v1764177418/Spectrum_of_Hope_3_dtj9rl.jpg",
         "size_percentage": 50,
-        "caption": "Statistics showing our primary results."
+        "caption": "Statistics showing our primary results.",
+        "use_soft_bg": false
       },
       "content": [
         {
@@ -103,7 +106,8 @@
       "image": {
         "url": "YOUR_CLOUDINARY_INDEX_IMAGE_URL.jpg",
         "size_percentage": 100,
-        "caption": "Das Hauptbild für den Kampagnenstart."
+        "caption": "Das Hauptbild für den Kampagnenstart.",
+        "use_soft_bg": false
       },
       "chapters": [
         {
@@ -126,7 +130,8 @@
       "image": {
         "url": "YOUR_CLOUDINARY_CHAPTER1_URL.jpg",
         "size_percentage": 40,
-        "caption": "Das erste Bild, das das Kernkonzept veranschaulicht."
+        "caption": "Das erste Bild, das das Kernkonzept veranschaulicht.",
+        "use_soft_bg": false
       },
       "content": [
         {
@@ -161,7 +166,8 @@
       "image": {
         "url": "YOUR_CLOUDINARY_CHAPTER2_URL.jpg",
         "size_percentage": 60,
-        "caption": "Statistiken, die unsere primären Ergebnisse zeigen."
+        "caption": "Statistiken, die unsere primären Ergebnisse zeigen.",
+        "use_soft_bg": false
       },
       "content": [
         {
