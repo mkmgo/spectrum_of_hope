@@ -108,6 +108,8 @@ a:hover {
     margin: 0 0 20px 0;
     padding: 0;
     width: 100%; /* Remains 100% width on mobile */
+    order: 1;
+
 }
 
 .story-media img {
@@ -169,6 +171,7 @@ a:hover {
         flex-grow: 1;
         /* FIX: Prevents the text block from collapsing, stabilizing the entire row */
         min-width: 450px; 
+        order: 2;
     }
 }
 
