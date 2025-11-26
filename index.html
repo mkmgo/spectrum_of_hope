@@ -45,18 +45,39 @@
             const pageData = langData[PAGE_ID];
             if (!pageData) return;
 
-            // 1. Set Page Title (Browser tab title)
+            // 1. Set Page Title (Browser tab title) and Visible Main Headline
             const pageTitleElement = document.getElementById('page-title');
             if (pageTitleElement) pageTitleElement.textContent = pageData.title;
             
-            // 🛑 CRITICAL FIX: Set the visible main headline
             const mainTitleElement = document.getElementById('main-title');
             if (mainTitleElement) mainTitleElement.textContent = pageData.title;
             
-            // 2. Inject Language Buttons (If you decide to add them back later)
+            // 2. Inject Language Buttons (If any are needed in the future)
             document.querySelectorAll('.lang-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.lang === lang);
             });
+            
+            // 🛑 NEW: Inject Sequential Navigation Links (Index only needs 'Next')
+            const navTop = document.getElementById('chapter-nav-top');
+            if (navTop) {
+                let navHTML = '';
+                
+                // Index has no previous link, so we use a placeholder for alignment
+                navHTML += `<span class="nav-placeholder"></span> | `;
+                
+                // Home Link (This is the Home page)
+                navHTML += `<a href="${pageData.page_url}" class="nav-home">Home</a> | `;
+                
+                // Next Link
+                if (pageData.next_story_link) {
+                    navHTML += `<a href="${pageData.next_story_link}" class="nav-next">Next →</a>`;
+                } else {
+                    navHTML += `<span class="nav-placeholder"></span>`;
+                }
+
+                navTop.innerHTML = navHTML;
+            }
+            // ----------------------------------------------------
 
             // 3. Inject Image, Caption, and Set Size
             const imgContainer = document.getElementById('image-container');
@@ -99,10 +120,9 @@
             const navList = document.getElementById('chapters-list');
             if (navList) {
                 navList.innerHTML = pageData.chapters.map(chapter => {
-                    // Check if chapter data exists in the current language, default to English if possible
-                    const chapterData = contentData[lang][chapter.id] || contentData['en'][chapter.id];
+                    // Fallback to English data if the current language chapter data is missing
+                    const chapterData = langData[chapter.id] || contentData['en'][chapter.id];
 
-                    // Use the title/description from the index chapters list (since they are short summaries)
                     return `
                         <li>
                             <a href="${chapterData.page_url}">
@@ -133,7 +153,12 @@
     
     <div class="story-container">
         
+        <div id="chapter-nav-top"></div>
+
         <div class="story-block">
+            
+            <figure class="story-media index-media" id="image-container">
+                </figure>
             
             <div class="story-text" id="story-text-content">
                 <h1 id="main-title"></h1> 
@@ -144,9 +169,6 @@
                         </ul>
                 </nav>
             </div>
-
-            <figure class="story-media index-media" id="image-container">
-                </figure>
             
         </div>
     </div>
