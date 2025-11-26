@@ -45,9 +45,13 @@
             const pageData = langData[PAGE_ID];
             if (!pageData) return;
 
-            // 1. Set Page Title
+            // 1. Set Page Title (Browser tab title)
             const pageTitleElement = document.getElementById('page-title');
             if (pageTitleElement) pageTitleElement.textContent = pageData.title;
+            
+            // 🛑 CRITICAL FIX: Set the visible main headline
+            const mainTitleElement = document.getElementById('main-title');
+            if (mainTitleElement) mainTitleElement.textContent = pageData.title;
             
             // 2. Inject Language Buttons (If you decide to add them back later)
             document.querySelectorAll('.lang-btn').forEach(btn => {
@@ -81,7 +85,7 @@
                 `;
                 imgContainer.innerHTML = imgHTML;
                 
-                // 🛑 CRITICAL FIX: Set the image's width relative to the text using flex-basis 
+                // Set the image's width relative to the text using flex-basis 
                 imgContainer.style.flexBasis = imgData.size_percentage + '%'; 
             } else if (imgContainer) {
                 imgContainer.style.display = 'none';
@@ -95,7 +99,10 @@
             const navList = document.getElementById('chapters-list');
             if (navList) {
                 navList.innerHTML = pageData.chapters.map(chapter => {
-                    const chapterData = langData[chapter.id];
+                    // Check if chapter data exists in the current language, default to English if possible
+                    const chapterData = contentData[lang][chapter.id] || contentData['en'][chapter.id];
+
+                    // Use the title/description from the index chapters list (since they are short summaries)
                     return `
                         <li>
                             <a href="${chapterData.page_url}">
@@ -117,7 +124,7 @@
             }
         }
 
-        // 🛑 Initialization: Start content loading
+        // Initialization: Start content loading
         document.addEventListener('DOMContentLoaded', loadIndexContent);
 
     </script>
@@ -129,7 +136,7 @@
         <div class="story-block">
             
             <div class="story-text" id="story-text-content">
-                <h1 id="main-title"></h1>
+                <h1 id="main-title"></h1> 
                 <div id="story-intro" class="story-intro"></div>
 
                 <nav class="campaign-nav">
