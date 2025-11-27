@@ -8,19 +8,25 @@
   <script src="https://unpkg.com/decap-cms@^3.1.0/dist/decap-cms.js"></script>
 </head>
 <body>
-  <script>
-    if (window.netlifyIdentity) {
-      window.netlifyIdentity.on("init", user => {
-        if (!user) {
-          window.netlifyIdentity.on("login", () => {
-            document.location.href = "/admin/";
-          });
-        }
-      });
-    }
+  
+  <div id="root"></div>
 
-    // Initialize the CMS now that the library is fully loaded
-    CMS.init(); 
+  <script>
+    // Standard way to ensure all HTML and scripts are loaded before running core logic
+    window.onload = function() {
+        if (window.netlifyIdentity) {
+            window.netlifyIdentity.on("init", user => {
+                if (!user) {
+                    window.netlifyIdentity.on("login", () => {
+                        document.location.href = "/admin/";
+                    });
+                }
+            });
+        }
+        
+        // This is the command that was failing, now it runs when safe.
+        CMS.init(); 
+    }
   </script>
 </body>
 </html>
