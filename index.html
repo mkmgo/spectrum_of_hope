@@ -115,6 +115,15 @@
             // 4. Inject Intro Text
             const introElement = document.getElementById('story-intro');
             if (introElement) introElement.innerHTML = `<p>${pageData.intro}</p>`;
+            
+            // 🛑 NEW: Inject Subheadline 🛑
+            const subheadlineElement = document.getElementById('index-subheadline');
+            if (subheadlineElement) subheadlineElement.textContent = pageData.subheadline;
+
+            // 🛑 NEW: Inject Body Text 🛑
+            // Using innerHTML with <p> tags allows you to use HTML formatting (like <strong>) in content.json
+            const bodyTextElement = document.getElementById('index-body-text');
+            if (bodyTextElement) bodyTextElement.innerHTML = `<p>${pageData.body_text}</p>`;
 
             // 5. Inject Chapter Navigation List
             const navList = document.getElementById('chapters-list');
@@ -163,7 +172,8 @@
             <div class="story-text" id="story-text-content">
                 <h1 id="main-title"></h1> 
                 <div id="story-intro" class="story-intro"></div>
-
+                <h2 id="index-subheadline" class="index-subheadline"></h2>
+                <div id="index-body-text" class="index-body-text"></div>
                 <nav class="campaign-nav">
                     <ul id="chapters-list">
                         </ul>
