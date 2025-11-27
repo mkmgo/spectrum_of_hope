@@ -6,7 +6,8 @@
   <title>Content Manager</title>
   
   <script src="https://unpkg.com/decap-cms@^3.1.0/dist/decap-cms.js"></script>
-
+</head>
+<body>
   <script>
     if (window.netlifyIdentity) {
       window.netlifyIdentity.on("init", user => {
@@ -18,10 +19,8 @@
       });
     }
 
-    // Initialize the CMS after the script has loaded
-    CMS.init();
+    // Initialize the CMS now that the library is fully loaded
+    CMS.init(); 
   </script>
-</head>
-<body>
-  </body>
+</body>
 </html>
