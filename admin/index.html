@@ -5,25 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Content Manager</title>
   
+  <script>
+    // 🛑 THIS MUST BE YOUR REAL NETLIFY API ID 🛑
+    window.CMS_CONFIGURATION = {
+      site_id: '2dcf63bf-66db-4fda-8e2e-66e970b79252' 
+    };
+  </script>
+
   <script src="https://unpkg.com/decap-cms@^3.1.0/dist/decap-cms.js" defer></script>
 </head>
 <body>
-  
   <div id="root"></div>
 
   <script>
-    if (window.netlifyIdentity) {
-      window.netlifyIdentity.on("init", user => {
-        if (!user) {
-          window.netlifyIdentity.on("login", () => {
-            document.location.href = "/admin/";
-          });
-        }
-      });
-    }
-
-    // Initialize the CMS
-    CMS.init();
+    // Note: We use the simple CMS.init() here as the site_id is fixed above.
+    CMS.init(); 
   </script>
 </body>
 </html>
