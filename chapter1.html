@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="page-title">Loading...</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://www.paypalobjects.com/donate/sdk/donate-sdk.js" charset="UTF-8"></script>
     <script>
         // --- Theme Management ---
         document.addEventListener('DOMContentLoaded', () => {
@@ -127,8 +128,29 @@
                     } else if (block.type === 'text') {
                         htmlBlock = `<p>${block.text}</p>`;
                     } else if (block.type === 'link') {
+                        // Keeps simple links (like Download PDF)
                         const actionClass = block.action === 'download' ? 'download-link' : 'paypal-button';
                         htmlBlock = `<a href="${block.url}" class="${actionClass}" target="_blank">${block.text}</a>`;
+                    } else if (block.type === 'paypal_button') {
+                        // 🛑 NEW: PayPal SDK button logic 🛑
+                        const containerId = `paypal-donate-button-${Date.now()}`;
+                        
+                        // 1. Inject a placeholder div
+                        htmlBlock = `<div id="${containerId}" class="paypal-sdk-container"></div>`;
+                        
+                        // 2. Schedule the rendering
+                        // This uses setTimeout to ensure the placeholder div is painted before the SDK tries to render into it.
+                        setTimeout(() => {
+                            // Check if the SDK is ready and the hosted ID exists
+                            if (window.PayPal && window.PayPal.Donation && block.hosted_id) {
+                                PayPal.Donation.Button({
+                                    env: 'production',
+                                    hosted_button_id: block.hosted_id
+                                }).render(`#${containerId}`);
+                            } else {
+                                console.error('PayPal SDK not ready or missing hosted ID.');
+                            }
+                        }, 50); 
                     }
                     storyText.innerHTML += htmlBlock;
                 });

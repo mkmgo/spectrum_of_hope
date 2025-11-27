@@ -60,11 +60,9 @@
           "type": "text",
           "text": "This paragraph details the objectives of the campaign..."
         },
-        {
-          "type": "link",
-          "text": "Donate",
-          "url": "https://www.paypal.com/donate/?hosted_button_id=4TNEHSHJYT8YG",
-          "action": "open"
+       {
+          "type": "paypal_button",
+          "hosted_id": "4TNEHSHJYT8YG"
         }
       ]
     },
@@ -151,10 +149,8 @@
           "text": "Dieser Absatz beschreibt die Ziele der Kampagne im Detail..."
         },
         {
-          "type": "link",
-          "text": "Spenden Sie für unsere Sache",
-          "url": "YOUR_PAYPAL_ME_LINK",
-          "action": "open"
+          "type": "paypal_button",
+          "hosted_id": "4TNEHSHJYT8YG"
         }
       ]
     },
