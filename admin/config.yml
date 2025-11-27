@@ -2,7 +2,7 @@ backend:
   # Authenticates Netlify CMS with your GitHub account
   name: github
   # 🛑 REPLACE THIS LINE WITH YOUR REPO PATH (e.g., 'johndoe/my-campaign-site') 🛑
-  repo: 'YOUR_USERNAME/YOUR_REPO' 
+  repo: 'mkmgo/spectrum_of_hope' 
   branch: main 
 
 media_folder: "images"
