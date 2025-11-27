@@ -9,29 +9,5 @@
 </head>
 <body>
   <div id="root"></div>
-
-  <script>
-    // 1. Manually initialize the CMS and connect it to your config.yml
-    CMS.init({
-      config: {
-        backend: {
-          // This ensures the CMS knows to look for the configuration
-          // even if other settings are being overridden.
-          // Note: This block should match your primary config.yml backend section
-          // but we only need 'name', 'repo', and the correct 'site_id'.
-          name: 'github',
-          repo: 'mkmgo/spectrum_of_hope',
-          site_id: '2dcf63bf-66db-4fda-8e2e-66e970b79252' 
-        }
-      }
-    });
-
-    // 2. Handle the Netlify Identity redirect (optional but clean)
-    if (window.netlifyIdentity) {
-      window.netlifyIdentity.on("login", () => {
-        document.location.href = "/admin/";
-      });
-    }
-  </script>
 </body>
 </html>
