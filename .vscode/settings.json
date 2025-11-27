@@ -1,0 +1,14 @@
+{
+  "editor.formatOnSave": true,
+  "editor.detectIndentation": false,
+  "editor.tabSize": 2,
+  "files.trimTrailingWhitespace": true,
+  "json.format.enable": true,
+  "json.validate.enable": true,
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "markdown-preview-enhanced.openPreviewOnStart": false,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "prettier.requireConfig": false
+}

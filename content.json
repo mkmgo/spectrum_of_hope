@@ -1,10 +1,7 @@
 {
   "settings": {
     "defaultLanguage": "en",
-    "supportedLanguages": [
-      "en",
-      "de"
-    ],
+    "supportedLanguages": ["en", "de"],
     "base_url": "/"
   },
   "en": {
