@@ -1,7 +1,7 @@
 backend:
   name: github
   # 🛑 THIS IS THE MISSING KEY 🛑
-  repo: 'mkmgo/spectrum_of_hope' 
+  repo: 'mkmgo.github.io/spectrum_of_hope' 
   branch: main
   # Keep local_backend: true for now to test locally
   local_backend: true
