@@ -5,28 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Content Manager</title>
   
-  <script src="https://unpkg.com/decap-cms@^3.1.0/dist/decap-cms.js"></script>
+  <script src="https://unpkg.com/decap-cms@^3.1.0/dist/decap-cms.js" defer></script>
 </head>
 <body>
   
   <div id="root"></div>
 
   <script>
-    // Standard way to ensure all HTML and scripts are loaded before running core logic
-    window.onload = function() {
-        if (window.netlifyIdentity) {
-            window.netlifyIdentity.on("init", user => {
-                if (!user) {
-                    window.netlifyIdentity.on("login", () => {
-                        document.location.href = "/admin/";
-                    });
-                }
-            });
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.on("init", user => {
+        if (!user) {
+          window.netlifyIdentity.on("login", () => {
+            document.location.href = "/admin/";
+          });
         }
-        
-        // This is the command that was failing, now it runs when safe.
-        CMS.init(); 
+      });
     }
+
+    // Initialize the CMS
+    CMS.init();
   </script>
 </body>
 </html>
