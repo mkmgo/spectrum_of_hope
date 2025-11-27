@@ -6,8 +6,22 @@
   <title>Content Manager</title>
   
   <script src="https://unpkg.com/decap-cms@^3.1.0/dist/decap-cms.js"></script>
+
+  <script>
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.on("init", user => {
+        if (!user) {
+          window.netlifyIdentity.on("login", () => {
+            document.location.href = "/admin/";
+          });
+        }
+      });
+    }
+
+    // Initialize the CMS after the script has loaded
+    CMS.init();
+  </script>
 </head>
 <body>
-  <div id="root"></div>
-</body>
+  </body>
 </html>
