@@ -4,7 +4,7 @@ backend:
   # 🛑 REPLACE THIS LINE WITH YOUR REPO PATH (e.g., 'johndoe/my-campaign-site') 🛑
   repo: 'mkmgo/spectrum_of_hope' 
   branch: main
-  base_url: https://ephemeral-lollipop-3a4b69.netlify.app
+  auth_base_url: https://ephemeral-lollipop-3a4b69.netlify.app
 
 media_folder: "images"
 public_folder: "/images"
