@@ -1,18 +1,7 @@
 backend:
-  # 🛑 Use git-gateway for Netlify Identity/Git Gateway integration 🛑
   name: git-gateway
-  
-  # The GitHub repository path (which we confirmed was missing)
-  repo: 'mkmgo/spectrum_of_hope' 
-  
-  # This is the correct branch (usually main or master)
-  branch: main 
-  
-  # This is your unique ID (which fixed the authentication error)
-  site_id: '2dcf63bf-66db-4fda-8e2e-66e970b79252' 
-
-  # 🛑 REMOVE THIS LINE BEFORE PUSHING TO NETLIFY 🛑
-  # local_backend: true
+  branch: main
+  base_url: https://ephemeral-lollipop-3a4b69.netlify.app/
 
 media_folder: "images"
 public_folder: "/images"
