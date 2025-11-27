@@ -1,9 +1,10 @@
 backend:
-  # Authenticates Netlify CMS with your GitHub account
   name: github
-  # 🛑 REPLACE THIS LINE WITH YOUR REPO PATH (e.g., 'johndoe/my-campaign-site') 🛑
+  # 🛑 THIS IS THE MISSING KEY 🛑
   repo: 'mkmgo/spectrum_of_hope' 
   branch: main
+  # Keep local_backend: true for now to test locally
+  local_backend: true
 
 media_folder: "images"
 public_folder: "/images"
