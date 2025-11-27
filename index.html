@@ -1,138 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title id="page-title">Loading...</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css" />
     <script>
-        // --- Theme Management (SHARED) ---
-        document.addEventListener('DOMContentLoaded', () => {
-            const currentTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-            document.body.setAttribute('data-theme', currentTheme);
+      // --- Theme Management (SHARED) ---
+      document.addEventListener("DOMContentLoaded", () => {
+        const currentTheme =
+          localStorage.getItem("theme") ||
+          (window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light");
+        document.body.setAttribute("data-theme", currentTheme);
+      });
+
+      function toggleTheme() {
+        const currentTheme = document.body.getAttribute("data-theme");
+        const newTheme = currentTheme === "light" ? "dark" : "light";
+        document.body.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
+      }
+
+      // --- Content & Language Loading (INDEX SPECIFIC) ---
+      let contentData = {};
+      let currentLang = localStorage.getItem("lang") || "en";
+      const PAGE_ID = "index"; // Fixed ID for this page
+
+      async function loadIndexContent() {
+        try {
+          const response = await fetch("./content.json");
+          contentData = await response.json();
+        } catch (error) {
+          console.error(
+            "Fatal Error: Could not fetch or parse content.json",
+            error
+          );
+          document.getElementById("page-title").textContent =
+            "Error Loading Content";
+          return;
+        }
+
+        // Call the shared content injection function
+        injectIndexContent(currentLang);
+      }
+
+      function injectIndexContent(lang) {
+        const langData = contentData[lang];
+        if (!langData) return;
+
+        const pageData = langData[PAGE_ID];
+        if (!pageData) return;
+
+        // 1. Set Page Title (Browser tab title) and Visible Main Headline
+        const pageTitleElement = document.getElementById("page-title");
+        if (pageTitleElement) pageTitleElement.textContent = pageData.title;
+
+        const mainTitleElement = document.getElementById("main-title");
+        if (mainTitleElement) mainTitleElement.textContent = pageData.title;
+
+        // 2. Inject Language Buttons (If any are needed in the future)
+        document.querySelectorAll(".lang-btn").forEach((btn) => {
+          btn.classList.toggle("active", btn.dataset.lang === lang);
         });
 
-        function toggleTheme() {
-            const currentTheme = document.body.getAttribute('data-theme');
-            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-            document.body.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
+        // 🛑 NEW: Inject Sequential Navigation Links (Index only needs 'Next')
+        const navTop = document.getElementById("chapter-nav-top");
+        if (navTop) {
+          let navHTML = "";
+
+          // Index has no previous link, so we use a placeholder for alignment
+          navHTML += `<span class="nav-placeholder"></span> | `;
+
+          // Home Link (This is the Home page)
+          navHTML += `<a href="${pageData.page_url}" class="nav-home">Home</a> | `;
+
+          // Next Link
+          if (pageData.next_story_link) {
+            navHTML += `<a href="${pageData.next_story_link}" class="nav-next">Next →</a>`;
+          } else {
+            navHTML += `<span class="nav-placeholder"></span>`;
+          }
+
+          navTop.innerHTML = navHTML;
         }
+        // ----------------------------------------------------
 
-        // --- Content & Language Loading (INDEX SPECIFIC) ---
-        let contentData = {};
-        let currentLang = localStorage.getItem('lang') || 'en';
-        const PAGE_ID = "index"; // Fixed ID for this page
+        // 3. Inject Image, Caption, and Set Size
+        const imgContainer = document.getElementById("image-container");
+        const imgData = pageData.image;
 
-        async function loadIndexContent() {
-            try {
-                const response = await fetch('./content.json');
-                contentData = await response.json();
-            } catch (error) {
-                console.error("Fatal Error: Could not fetch or parse content.json", error);
-                document.getElementById('page-title').textContent = "Error Loading Content";
-                return;
-            }
-            
-            // Call the shared content injection function
-            injectIndexContent(currentLang);
-        }
+        if (imgContainer && imgData) {
+          // Conditional soft background logic
+          if (imgData.use_soft_bg) {
+            imgContainer.classList.add("soft-background-image");
+          } else {
+            imgContainer.classList.remove("soft-background-image");
+          }
 
-        function injectIndexContent(lang) {
-            const langData = contentData[lang];
-            if (!langData) return;
-            
-            const pageData = langData[PAGE_ID];
-            if (!pageData) return;
+          const webpUrl = imgData.url.replace(/\.(jpe?g|png)$/i, ".webp");
 
-            // 1. Set Page Title (Browser tab title) and Visible Main Headline
-            const pageTitleElement = document.getElementById('page-title');
-            if (pageTitleElement) pageTitleElement.textContent = pageData.title;
-            
-            const mainTitleElement = document.getElementById('main-title');
-            if (mainTitleElement) mainTitleElement.textContent = pageData.title;
-            
-            // 2. Inject Language Buttons (If any are needed in the future)
-            document.querySelectorAll('.lang-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.lang === lang);
-            });
-            
-            // 🛑 NEW: Inject Sequential Navigation Links (Index only needs 'Next')
-            const navTop = document.getElementById('chapter-nav-top');
-            if (navTop) {
-                let navHTML = '';
-                
-                // Index has no previous link, so we use a placeholder for alignment
-                navHTML += `<span class="nav-placeholder"></span> | `;
-                
-                // Home Link (This is the Home page)
-                navHTML += `<a href="${pageData.page_url}" class="nav-home">Home</a> | `;
-                
-                // Next Link
-                if (pageData.next_story_link) {
-                    navHTML += `<a href="${pageData.next_story_link}" class="nav-next">Next →</a>`;
-                } else {
-                    navHTML += `<span class="nav-placeholder"></span>`;
-                }
-
-                navTop.innerHTML = navHTML;
-            }
-            // ----------------------------------------------------
-
-            // 3. Inject Image, Caption, and Set Size
-            const imgContainer = document.getElementById('image-container');
-            const imgData = pageData.image;
-
-            if (imgContainer && imgData) {
-                // Conditional soft background logic
-                if (imgData.use_soft_bg) { 
-                    imgContainer.classList.add('soft-background-image');
-                } else {
-                    imgContainer.classList.remove('soft-background-image');
-                }
-                
-                const webpUrl = imgData.url.replace(/\.(jpe?g|png)$/i, '.webp'); 
-
-                const imgHTML = `
+          const imgHTML = `
                     <picture>
                         <source srcset="${webpUrl}" type="image/webp">
-                        <img 
-                            src="${imgData.url}" 
-                            alt="${imgData.caption}" 
-                            style="width: 100%;" 
+                        <img
+                            src="${imgData.url}"
+                            alt="${imgData.caption}"
+                            style="width: 100%;"
                         >
                     </picture>
                     <figcaption>${imgData.caption}</figcaption>
                 `;
-                imgContainer.innerHTML = imgHTML;
-                
-                // Set the image's width relative to the text using flex-basis 
-                imgContainer.style.flexBasis = imgData.size_percentage + '%'; 
-            } else if (imgContainer) {
-                imgContainer.style.display = 'none';
-            }
+          imgContainer.innerHTML = imgHTML;
 
-            // 4. Inject Intro Text
-            const introElement = document.getElementById('story-intro');
-            if (introElement) introElement.innerHTML = `<p>${pageData.intro}</p>`;
-            
-            // 🛑 NEW: Inject Subheadline 🛑
-            const subheadlineElement = document.getElementById('index-subheadline');
-            if (subheadlineElement) subheadlineElement.textContent = pageData.subheadline;
+          // Set the image's width relative to the text using flex-basis
+          imgContainer.style.flexBasis = imgData.size_percentage + "%";
+        } else if (imgContainer) {
+          imgContainer.style.display = "none";
+        }
 
-            // 🛑 NEW: Inject Body Text 🛑
-            // Using innerHTML with <p> tags allows you to use HTML formatting (like <strong>) in content.json
-            const bodyTextElement = document.getElementById('index-body-text');
-            if (bodyTextElement) bodyTextElement.innerHTML = `<p>${pageData.body_text}</p>`;
+        // 4. Inject Intro Text
+        const introElement = document.getElementById("story-intro");
+        if (introElement) introElement.innerHTML = `<p>${pageData.intro}</p>`;
 
-            // 5. Inject Chapter Navigation List
-            const navList = document.getElementById('chapters-list');
-            if (navList) {
-                navList.innerHTML = pageData.chapters.map(chapter => {
-                    // Fallback to English data if the current language chapter data is missing
-                    const chapterData = langData[chapter.id] || contentData['en'][chapter.id];
+        // 🛑 NEW: Inject Subheadline 🛑
+        const subheadlineElement = document.getElementById("index-subheadline");
+        if (subheadlineElement)
+          subheadlineElement.textContent = pageData.subheadline;
 
-                    return `
+        // 🛑 NEW: Inject Body Text 🛑
+        // Using innerHTML with <p> tags allows you to use HTML formatting (like <strong>) in content.json
+        const bodyTextElement = document.getElementById("index-body-text");
+        if (bodyTextElement)
+          bodyTextElement.innerHTML = `<p>${pageData.body_text}</p>`;
+
+        // 5. Inject Chapter Navigation List
+        const navList = document.getElementById("chapters-list");
+        if (navList) {
+          navList.innerHTML = pageData.chapters
+            .map((chapter) => {
+              // Fallback to English data if the current language chapter data is missing
+              const chapterData =
+                langData[chapter.id] || contentData["en"][chapter.id];
+
+              return `
                         <li>
                             <a href="${chapterData.page_url}">
                                 <h2>${chapter.title}</h2>
@@ -140,48 +152,41 @@
                             </a>
                         </li>
                     `;
-                }).join('');
-            }
+            })
+            .join("");
         }
+      }
 
-        function switchLanguage(newLang) {
-            if (contentData[newLang]) {
-                localStorage.setItem('lang', newLang);
-                currentLang = newLang;
-                // Reload content for the index page
-                injectIndexContent(newLang);
-            }
+      function switchLanguage(newLang) {
+        if (contentData[newLang]) {
+          localStorage.setItem("lang", newLang);
+          currentLang = newLang;
+          // Reload content for the index page
+          injectIndexContent(newLang);
         }
+      }
 
-        // Initialization: Start content loading
-        document.addEventListener('DOMContentLoaded', loadIndexContent);
-
+      // Initialization: Start content loading
+      document.addEventListener("DOMContentLoaded", loadIndexContent);
     </script>
-</head>
-<body data-page-id="index" class="index-page">
-    
+  </head>
+  <body data-page-id="index" class="index-page">
     <div class="story-container">
-        
-        <div id="chapter-nav-top"></div>
+      <div id="chapter-nav-top"></div>
 
-        <div class="story-block">
-            
-            <figure class="story-media index-media" id="image-container">
-                </figure>
-            
-            <div class="story-text" id="story-text-content">
-                <h1 id="main-title"></h1> 
-                <div id="story-intro" class="story-intro"></div>
-                <h2 id="index-subheadline" class="index-subheadline"></h2>
-                <div id="index-body-text" class="index-body-text"></div>
-                <nav class="campaign-nav">
-                    <ul id="chapters-list">
-                        </ul>
-                </nav>
-            </div>
-            
+      <div class="story-block">
+        <figure class="story-media index-media" id="image-container"></figure>
+
+        <div class="story-text" id="story-text-content">
+          <h1 id="main-title"></h1>
+          <div id="story-intro" class="story-intro"></div>
+          <h2 id="index-subheadline" class="index-subheadline"></h2>
+          <div id="index-body-text" class="index-body-text"></div>
+          <nav class="campaign-nav">
+            <ul id="chapters-list"></ul>
+          </nav>
         </div>
+      </div>
     </div>
-
-</body>
+  </body>
 </html>
