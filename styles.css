@@ -5,7 +5,7 @@
     --block-bg: #ffffff;        /* Content block background (white) */
     --border-color: #cccccc;
     --accent-color: #007bff;    /* Blue for headlines/links */
-    --soft-image-bg: #1f0202;   
+    --soft-image-bg: #fbfbfb;   
 }
 
 body[data-theme="dark"] {
