@@ -162,25 +162,25 @@ a:hover {
     }
     
     .story-media {
-        /* FIX: 'flex: 0 0 auto' means: use the width set by JS (flex-basis), and DO NOT GROW OR SHRINK */
-        flex: 0 0 auto; 
+        /* 🛑 CRITICAL FIX for Chapter Pages: Ensure the image block respects the flex-basis percentage */
+        flex-grow: 0;   /* Do not grow past the percentage */
+        flex-shrink: 0; /* Do not shrink below the percentage */
+        flex-basis: auto; /* Let the JS-injected style override this with the percentage */
         margin: 0;
     }
 
     .story-text {
         flex-grow: 1;
-        /* Default min-width for chapter pages */
-        min-width: 450px; 
+        /* The min-width is permanently removed here to allow dynamic sizing. */
     }
     
-    /* --- INDEX PAGE SPECIFIC OVERRIDES (Fixes Image Percentage) --- */
+    /* --- INDEX PAGE SPECIFIC OVERRIDES (Ensure index sizing still works) --- */
     .index-page .story-text {
-        min-width: initial; /* 🛑 CRITICAL FIX: Resets the fixed width constraint for percentage sizing */
-        flex-basis: auto;   /* Ensures text takes the remaining space */
+        min-width: initial;
+        flex-basis: auto;
         flex-grow: 1;
     }
 
-    /* We also make sure the image container itself is free to take the size set by JS */
     .index-page .story-media {
         flex-grow: 0;
         flex-shrink: 0;
