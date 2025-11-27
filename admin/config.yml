@@ -1,7 +1,7 @@
 backend:
   name: git-gateway
   branch: main
-  base_url: https://ephemeral-lollipop-3a4b69.netlify.app/
+  base_url: https://ephemeral-lollipop-3a4b69.netlify.app/admin/
 
 media_folder: "images"
 public_folder: "/images"
