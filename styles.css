@@ -110,6 +110,10 @@ a:hover {
     padding: 0;
     width: 100%; /* Remains 100% width on mobile */
     order: 1; /* 🛑 FIX: Image always comes FIRST 🛑 */
+/* 🛑 CRITICAL FIX FOR PADDING: Makes width include padding/border */
+    box-sizing: border-box; 
+}
+
 }
 
 .story-media img {
