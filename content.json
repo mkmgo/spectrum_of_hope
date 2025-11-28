@@ -21,7 +21,7 @@
       "chapters": [
         {
           "id": "chapter1",
-          "title": "Chapter 1: The Vision Begins",
+          "title": "A Day in Our Life",
           "description": "Read about our initial concept and goals."
         },
         {
@@ -32,7 +32,7 @@
       ]
     },
     "chapter1": {
-      "title": "Chapter 1: The Vision Begins",
+      "title": "A Warm Welcome",
       "page_url": "chapter1.html",
       "prev_story_link": "index.html",
       "next_story_link": "chapter2.html",
