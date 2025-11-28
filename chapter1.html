@@ -1,201 +1,210 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title id="page-title">Loading...</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://www.paypalobjects.com/donate/sdk/donate-sdk.js" charset="UTF-8"></script>
+    <link rel="stylesheet" href="styles.css" />
+    <script
+      src="https://www.paypalobjects.com/donate/sdk/donate-sdk.js"
+      charset="UTF-8"
+    ></script>
     <script>
-        // --- Theme Management ---
-        document.addEventListener('DOMContentLoaded', () => {
-            const currentTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-            document.body.setAttribute('data-theme', currentTheme);
-        });
+      // --- Theme Management ---
+      document.addEventListener("DOMContentLoaded", () => {
+        const currentTheme =
+          localStorage.getItem("theme") ||
+          (window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light");
+        document.body.setAttribute("data-theme", currentTheme);
+      });
 
-        function toggleTheme() {
-            const currentTheme = document.body.getAttribute('data-theme');
-            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-            document.body.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
+      function toggleTheme() {
+        const currentTheme = document.body.getAttribute("data-theme");
+        const newTheme = currentTheme === "light" ? "dark" : "light";
+        document.body.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
+      }
+
+      // --- Content & Language Loading ---
+      let contentData = {};
+      let currentLang = localStorage.getItem("lang") || "en";
+
+      async function loadContent(pageId) {
+        try {
+          // CRITICAL: Robust path to fetch the JSON file
+          const response = await fetch("./content.json");
+          contentData = await response.json();
+        } catch (error) {
+          console.error(
+            "Fatal Error: Could not fetch or parse content.json",
+            error
+          );
+          document.getElementById("page-title").textContent =
+            "Error Loading Content";
+          return;
         }
 
-        // --- Content & Language Loading ---
-        let contentData = {};
-        let currentLang = localStorage.getItem('lang') || 'en';
+        // Get the data block for the current language and page
+        const langData = contentData[currentLang];
+        if (!langData) {
+          console.error(`Language data for ${currentLang} not found.`);
+          return;
+        }
 
-        async function loadContent(pageId) {
-            try {
-                // CRITICAL: Robust path to fetch the JSON file
-                const response = await fetch('./content.json');
-                contentData = await response.json();
-            } catch (error) {
-                console.error("Fatal Error: Could not fetch or parse content.json", error);
-                document.getElementById('page-title').textContent = "Error Loading Content";
-                return;
-            }
-            
-            // Get the data block for the current language and page
-            const langData = contentData[currentLang];
-            if (!langData) {
-                 console.error(`Language data for ${currentLang} not found.`);
-                 return;
-            }
-            
-            const pageData = langData[pageId];
-            if (!pageData) {
-                console.error(`Page data for ${pageId} not found in language ${currentLang}.`);
-                return;
-            }
+        const pageData = langData[pageId];
+        if (!pageData) {
+          console.error(
+            `Page data for ${pageId} not found in language ${currentLang}.`
+          );
+          return;
+        }
 
-            // 1. Set Page Title
-            const pageTitleElement = document.getElementById('page-title');
-            if (pageTitleElement) pageTitleElement.textContent = pageData.title;
+        // 1. Set Page Title
+        const pageTitleElement = document.getElementById("page-title");
+        if (pageTitleElement) pageTitleElement.textContent = pageData.title;
 
-            // 2. Inject Sequential Navigation Links
-            const navTop = document.getElementById('chapter-nav-top');
-            if (navTop) {
-                let navHTML = '';
-                
-                // Previous Link
-                if (pageData.prev_story_link) {
-                    navHTML += `<a href="${pageData.prev_story_link}" class="nav-prev">← Previous</a> | `;
-                } else {
-                    navHTML += `<span class="nav-placeholder"></span> | `;
-                }
-                
-                // Home Link
-                if(langData.index && langData.index.page_url) {
-                    navHTML += `<a href="${langData.index.page_url}" class="nav-home">Home</a> | `;
-                } else {
-                    navHTML += `<span class="nav-placeholder"></span> | `;
-                }
+        // 2. Inject Sequential Navigation Links
+        const navTop = document.getElementById("chapter-nav-top");
+        if (navTop) {
+          let navHTML = "";
 
+          // Previous Link
+          if (pageData.prev_story_link) {
+            navHTML += `<a href="${pageData.prev_story_link}" class="nav-prev">← Previous</a> | `;
+          } else {
+            navHTML += `<span class="nav-placeholder"></span> | `;
+          }
 
-                // Next Link
-                if (pageData.next_story_link) {
-                    navHTML += `<a href="${pageData.next_story_link}" class="nav-next">Next →</a>`;
-                } else {
-                    navHTML += `<span class="nav-placeholder"></span>`;
-                }
+          // Home Link
+          if (langData.index && langData.index.page_url) {
+            navHTML += `<a href="${langData.index.page_url}" class="nav-home">☰</a> | `;
+          } else {
+            navHTML += `<span class="nav-placeholder"></span> | `;
+          }
 
-                navTop.innerHTML = navHTML;
-            }
+          // Next Link
+          if (pageData.next_story_link) {
+            navHTML += `<a href="${pageData.next_story_link}" class="nav-next">Next →</a>`;
+          } else {
+            navHTML += `<span class="nav-placeholder"></span>`;
+          }
 
-            // 3. Inject Image and Caption
-            const imgContainer = document.getElementById('image-container');
-            const imgData = pageData.image;
+          navTop.innerHTML = navHTML;
+        }
 
-            if (imgContainer && imgData) {
-                // Conditional soft background logic
-                if (imgData.use_soft_bg) { 
-                    imgContainer.classList.add('soft-background-image');
-                } else {
-                    imgContainer.classList.remove('soft-background-image');
-                }
-                
-                // Flexible replacement for JPG or PNG to generate WebP URL
-                const webpUrl = imgData.url.replace(/\.(jpe?g|png)$/i, '.webp'); 
+        // 3. Inject Image and Caption
+        const imgContainer = document.getElementById("image-container");
+        const imgData = pageData.image;
 
-                const imgHTML = `
+        if (imgContainer && imgData) {
+          // Conditional soft background logic
+          if (imgData.use_soft_bg) {
+            imgContainer.classList.add("soft-background-image");
+          } else {
+            imgContainer.classList.remove("soft-background-image");
+          }
+
+          // Flexible replacement for JPG or PNG to generate WebP URL
+          const webpUrl = imgData.url.replace(/\.(jpe?g|png)$/i, ".webp");
+
+          const imgHTML = `
                     <picture>
                         <source srcset="${webpUrl}" type="image/webp">
-                        <img 
-                            src="${imgData.url}" 
-                            alt="${imgData.caption}" 
-                            style="width: 100%;" 
+                        <img
+                            src="${imgData.url}"
+                            alt="${imgData.caption}"
+                            style="width: 100%;"
                         >
                     </picture>
                     <figcaption>${imgData.caption}</figcaption>
                 `;
-                imgContainer.innerHTML = imgHTML;
-                
-                // Set the image's width relative to the text using flex-basis (for desktop)
-                imgContainer.style.flexBasis = imgData.size_percentage + '%'; 
-            } else if (imgContainer) {
-                imgContainer.style.display = 'none';
-            }
+          imgContainer.innerHTML = imgHTML;
 
-            // 4. Inject Content Blocks
-            const storyText = document.getElementById('story-text-content');
-            if (storyText) {
-                storyText.innerHTML = `<h1>${pageData.title}</h1>`;
-
-                pageData.content.forEach(block => {
-                    let htmlBlock = '';
-                    if (block.type === 'headline') {
-                        htmlBlock = `<h2>${block.text}</h2>`;
-                    } else if (block.type === 'text') {
-                        htmlBlock = `<p>${block.text}</p>`;
-                    } else if (block.type === 'link') {
-                        // Keeps simple links (like Download PDF)
-                        const actionClass = block.action === 'download' ? 'download-link' : 'paypal-button';
-                        htmlBlock = `<a href="${block.url}" class="${actionClass}" target="_blank">${block.text}</a>`;
-                    } else if (block.type === 'paypal_button') {
-                        // 🛑 NEW: PayPal SDK button logic 🛑
-                        const containerId = `paypal-donate-button-${Date.now()}`;
-                        
-                        // 1. Inject a placeholder div
-                        htmlBlock = `<div id="${containerId}" class="paypal-sdk-container"></div>`;
-                        
-                        // 2. Schedule the rendering
-                        // This uses setTimeout to ensure the placeholder div is painted before the SDK tries to render into it.
-                        setTimeout(() => {
-                            // Check if the SDK is ready and the hosted ID exists
-                            if (window.PayPal && window.PayPal.Donation && block.hosted_id) {
-                                PayPal.Donation.Button({
-                                    env: 'production',
-                                    hosted_button_id: block.hosted_id
-                                }).render(`#${containerId}`);
-                            } else {
-                                console.error('PayPal SDK not ready or missing hosted ID.');
-                            }
-                        }, 50); 
-                    }
-                    storyText.innerHTML += htmlBlock;
-                });
-            }
-            
-            // 5. Set active language button
-            document.querySelectorAll('.lang-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.lang === currentLang);
-            });
+          // Set the image's width relative to the text using flex-basis (for desktop)
+          imgContainer.style.flexBasis = imgData.size_percentage + "%";
+        } else if (imgContainer) {
+          imgContainer.style.display = "none";
         }
 
-        function switchLanguage(newLang) {
-            if (contentData[newLang]) {
-                localStorage.setItem('lang', newLang);
-                currentLang = newLang;
-                // Reload content for the current page
-                const pageId = document.body.dataset.pageId;
-                loadContent(pageId);
+        // 4. Inject Content Blocks
+        const storyText = document.getElementById("story-text-content");
+        if (storyText) {
+          storyText.innerHTML = `<h1>${pageData.title}</h1>`;
+
+          pageData.content.forEach((block) => {
+            let htmlBlock = "";
+            if (block.type === "headline") {
+              htmlBlock = `<h2>${block.text}</h2>`;
+            } else if (block.type === "text") {
+              htmlBlock = `<p>${block.text}</p>`;
+            } else if (block.type === "link") {
+              // Keeps simple links (like Download PDF)
+              const actionClass =
+                block.action === "download" ? "download-link" : "paypal-button";
+              htmlBlock = `<a href="${block.url}" class="${actionClass}" target="_blank">${block.text}</a>`;
+            } else if (block.type === "paypal_button") {
+              // 🛑 NEW: PayPal SDK button logic 🛑
+              const containerId = `paypal-donate-button-${Date.now()}`;
+
+              // 1. Inject a placeholder div
+              htmlBlock = `<div id="${containerId}" class="paypal-sdk-container"></div>`;
+
+              // 2. Schedule the rendering
+              // This uses setTimeout to ensure the placeholder div is painted before the SDK tries to render into it.
+              setTimeout(() => {
+                // Check if the SDK is ready and the hosted ID exists
+                if (
+                  window.PayPal &&
+                  window.PayPal.Donation &&
+                  block.hosted_id
+                ) {
+                  PayPal.Donation.Button({
+                    env: "production",
+                    hosted_button_id: block.hosted_id,
+                  }).render(`#${containerId}`);
+                } else {
+                  console.error("PayPal SDK not ready or missing hosted ID.");
+                }
+              }, 50);
             }
+            storyText.innerHTML += htmlBlock;
+          });
         }
-        
-        // 🛑 CRITICAL FIX: Initializes content loading AFTER the page is ready.
-        document.addEventListener('DOMContentLoaded', () => {
-            const pageId = document.body.dataset.pageId;
-            loadContent(pageId);
+
+        // 5. Set active language button
+        document.querySelectorAll(".lang-btn").forEach((btn) => {
+          btn.classList.toggle("active", btn.dataset.lang === currentLang);
         });
+      }
 
+      function switchLanguage(newLang) {
+        if (contentData[newLang]) {
+          localStorage.setItem("lang", newLang);
+          currentLang = newLang;
+          // Reload content for the current page
+          const pageId = document.body.dataset.pageId;
+          loadContent(pageId);
+        }
+      }
+
+      // 🛑 CRITICAL FIX: Initializes content loading AFTER the page is ready.
+      document.addEventListener("DOMContentLoaded", () => {
+        const pageId = document.body.dataset.pageId;
+        loadContent(pageId);
+      });
     </script>
-</head>
-<body data-page-id="chapter1">
-
+  </head>
+  <body data-page-id="chapter1">
     <div class="story-container">
-        
-        <div id="chapter-nav-top"></div>
+      <div id="chapter-nav-top"></div>
 
-        <div class="story-block">
-            
-            <figure class="story-media" id="image-container">
-                </figure>
-            
-            <div class="story-text" id="story-text-content">
-                </div>
-            
-        </div>
+      <div class="story-block">
+        <figure class="story-media" id="image-container"></figure>
+
+        <div class="story-text" id="story-text-content"></div>
+      </div>
     </div>
-
-</body>
+  </body>
 </html>
