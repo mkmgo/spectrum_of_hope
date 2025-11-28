@@ -53,15 +53,16 @@
         },
         {
           "type": "headline",
-          "text": "Project Goals"
+          "text": "Beautiful Minds "
         },
         {
           "type": "text",
-          "text": "This paragraph details the objectives of the campaign..."
+          "text": "Your kind support is a keystone for Maya's way to blossom and find her most suitable detemintaion in life. Thank you for your kind support. We are fully transparent and will provide you wth every detail your donation affects. We thank you sincerely. "
         },
         {
           "type": "paypal_button",
-          "hosted_id": "4TNEHSHJYT8YG"
+          "hosted_id": "4TNEHSHJYT8YG",
+          "text": "Support a Way Forward"
         }
       ]
     },
