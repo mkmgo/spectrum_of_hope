@@ -120,7 +120,9 @@
 
       function tryNext() {
         if (tried >= candidates.length) {
-          console.debug("attemptAnimatedImageFallback: all candidates exhausted");
+          console.debug(
+            "attemptAnimatedImageFallback: all candidates exhausted"
+          );
           try {
             const dbg = container.querySelector(".fallback-debug");
             if (dbg) dbg.textContent = "No animated fallback available";
