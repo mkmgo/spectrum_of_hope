@@ -204,7 +204,7 @@
 
               try {
                 const dbg = container.querySelector(".fallback-debug");
-                if (dbg) dbg.textContent = "Animated fallback loaded";
+                if (dbg) dbg.textContent = ""; // fallback message cleared
               } catch (e) {}
               resolve(true);
             } catch (err) {
