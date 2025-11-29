@@ -204,7 +204,7 @@
 
               try {
                 const dbg = container.querySelector(".fallback-debug");
-                if (dbg) dbg.textContent = ""; // fallback message cleared
+                if (dbg) dbg.textContent = "Animated fallback loaded";
               } catch (e) {}
               resolve(true);
             } catch (err) {
@@ -278,7 +278,7 @@
 
               try {
                 const dbg = container.querySelector(".fallback-debug");
-                if (dbg) dbg.textContent = ""; // fallnack message cleared
+                if (dbg) dbg.textContent = "Animated fallback loaded";
               } catch (e) {}
               resolve(true);
             } catch (e) {
