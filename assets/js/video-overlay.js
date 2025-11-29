@@ -138,7 +138,7 @@ function attemptAnimatedImageFallback(
       resolve(false);
     }
   });
-}
+
 
 }      function tryNext() {
         if (tried >= candidates.length) {
@@ -330,3 +330,4 @@ fallbackMessage.innerHTML = "This video is not available on mobile devices.";
 
 // Append the fallback message to the container
 container.appendChild(fallbackMessage);
+}
