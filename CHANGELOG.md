@@ -3,6 +3,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased] - 2025-11-29
+
 - Refactor: shared video overlay helper + a11y focus styles; include helper in pages. (Added `assets/js/video-overlay.js`, updated `index.html`, `chapter1.html`, `chapter2.html`, and `styles.css`)
 
 --
