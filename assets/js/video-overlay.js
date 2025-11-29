@@ -100,10 +100,8 @@
       // Candidate animated image URLs
       const candidates = [];
 
-      // If explicit animated WebP URL provided (best case), try first
       if (animatedWebpUrl) candidates.push(animatedWebpUrl);
 
-      // Try Cloudinary transformations (e.g., convert webm to animated webp via CDN)
       if (mediaUrl.includes("cloudinary")) {
         candidates.push(
           mediaUrl
@@ -111,11 +109,7 @@
             .replace(/\.webm$/i, "")
         );
       }
-
-      // Try MP4 as animated fallback (loops natively on mobile with autoplay muted loop)
       candidates.push(mediaUrl.replace(/\.webm$/i, ".mp4"));
-
-      // Fallback to simple filename swaps
       candidates.push(mediaUrl.replace(/\.webm$/i, ".webp"));
       candidates.push(mediaUrl.replace(/\.webm$/i, ".gif"));
 
@@ -123,12 +117,21 @@
 
       function tryNext() {
         if (tried >= candidates.length) {
-          console.debug(
-            "attemptAnimatedImageFallback: all candidates exhausted"
-          );
+          // Only show fallback debug overlay if ALL candidates fail
           try {
             const dbg = container.querySelector(".fallback-debug");
-            if (dbg) dbg.textContent = "No animated fallback available";
+            if (!dbg) {
+              const newDbg = document.createElement("div");
+              newDbg.className = "fallback-debug";
+              newDbg.setAttribute("aria-hidden", "true");
+              const cStyle = window.getComputedStyle(container);
+              if (cStyle.position === "static" || !cStyle.position)
+                container.style.position = "relative";
+              container.appendChild(newDbg);
+              newDbg.textContent = "No animated fallback available";
+            } else {
+              dbg.textContent = "No animated fallback available";
+            }
           } catch (e) {}
           return resolve(false);
         }
@@ -138,29 +141,24 @@
           `attemptAnimatedImageFallback: trying candidate ${tried}/${candidates.length}: ${url}`
         );
 
-        // update (or create) visible debug badge inside the container for mobile troubleshooting
+        // Optionally show debug info for troubleshooting, but remove on success
         try {
           let dbg = container.querySelector(".fallback-debug");
           if (!dbg) {
             dbg = document.createElement("div");
             dbg.className = "fallback-debug";
             dbg.setAttribute("aria-hidden", "true");
-            // ensure container is positioned for absolute badge
             const cStyle = window.getComputedStyle(container);
             if (cStyle.position === "static" || !cStyle.position)
               container.style.position = "relative";
             container.appendChild(dbg);
           }
           dbg.textContent = `Trying: ${url}`;
-        } catch (e) {
-          /* ignore DOM badge errors */
-        }
+        } catch (e) {}
 
-        // Determine if this is a video (MP4) or image (WebP/GIF)
         const isVideo = /\.mp4$/i.test(url);
 
         if (isVideo) {
-          // For MP4, test by creating a video element and checking if it loads
           const testVid = document.createElement("video");
           testVid.src = url;
           testVid.muted = true;
@@ -169,18 +167,13 @@
           let loaded = false;
 
           const onCanPlay = function () {
-            if (loaded) return; // Prevent multiple fires
+            if (loaded) return;
             loaded = true;
-            console.debug(
-              "attemptAnimatedImageFallback: video candidate ready to play"
-            );
             cleanup();
             try {
-              // Remove original video element
               if (video && video.parentNode)
                 video.parentNode.removeChild(video);
 
-              // Create a looping video element for MP4
               const element = document.createElement("video");
               element.autoplay = true;
               element.muted = true;
@@ -202,10 +195,10 @@
               if (figcap) container.insertBefore(element, figcap);
               else container.insertBefore(element, container.firstChild);
 
-              try {
-                const dbg = container.querySelector(".fallback-debug");
-                if (dbg) dbg.textContent = "Animated fallback loaded";
-              } catch (e) {}
+              // REMOVE fallback debug overlay, if present, since we loaded successfully
+              const dbg = container.querySelector(".fallback-debug");
+              if (dbg) dbg.remove();
+
               resolve(true);
             } catch (err) {
               console.error(
@@ -232,10 +225,8 @@
           testVid.addEventListener("canplay", onCanPlay);
           testVid.addEventListener("error", onError);
 
-          // Set a timeout in case video loading stalls
           const timeoutId = setTimeout(function () {
             if (!loaded && testVid.readyState === 0) {
-              // Not started loading
               console.debug(
                 "attemptAnimatedImageFallback: video candidate timeout"
               );
@@ -248,7 +239,6 @@
             clearTimeout(timeoutId);
           });
         } else {
-          // For images (WebP/GIF), use Image object
           const img = new Image();
           img.crossOrigin = "anonymous";
 
@@ -257,11 +247,9 @@
               "attemptAnimatedImageFallback: image candidate loaded successfully"
             );
             try {
-              // Remove original video element
               if (video && video.parentNode)
                 video.parentNode.removeChild(video);
 
-              // Use img element for image formats (WebP/GIF)
               img.alt = caption || "";
               img.className = "animated-fallback";
               img.style.width = "100%";
@@ -271,21 +259,16 @@
               img.style.borderRadius = "8px";
               img.style.maxWidth = "100%";
 
-              // Insert into container (prefer before figcaption if present)
               const figcap = container.querySelector("figcaption");
               if (figcap) container.insertBefore(img, figcap);
               else container.insertBefore(img, container.firstChild);
 
-              try {
-                const dbg = container.querySelector(".fallback-debug");
-                if (dbg) dbg.textContent = "Animated fallback loaded";
-              } catch (e) {}
+              // REMOVE fallback debug overlay, if present, since we loaded successfully
+              const dbg = container.querySelector(".fallback-debug");
+              if (dbg) dbg.remove();
+
               resolve(true);
             } catch (e) {
-              console.debug(
-                "attemptAnimatedImageFallback: insertion failed, trying next",
-                e
-              );
               tryNext();
             }
           };
