@@ -113,20 +113,21 @@ function attemptAnimatedImageFallback(
       // Set the alternative video as the new video element
       container.replaceChild(alternativeVideo, video);
 
+      // Remove the fallback message on mobile devices
+      const fallbackMessageElement = container.querySelector(".fallback-message");
+      if (fallbackMessageElement) {
+        fallbackMessageElement.remove();
+      }
+
       // Resolve the promise with the result
       resolve(true);
     } else {
       // If it's not a mobile device, use the original media
       // Rest of the code for non-mobile devices
       // ...
-
-      // Remove the fallback message on mobile devices
-      const fallbackMessageElement = container.querySelector(".fallback-message");
-      if (fallbackMessageElement) {
-        fallbackMessageElement.style.display = "none";
-      }
     }
   });
+
 }
 }      function tryNext() {
         if (tried >= candidates.length) {
