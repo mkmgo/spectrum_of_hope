@@ -32,17 +32,51 @@
         try {
           const response = await fetch("./content.json");
           contentData = await response.json();
+          console.debug("Loaded content.json successfully");
         } catch (error) {
           console.error(
-            "Fatal Error: Could not fetch or parse content.json",
+            "Could not fetch content.json (file:// or network issue), using inline fallback",
             error
           );
-          document.getElementById("page-title").textContent =
-            "Error Loading Content";
-          return;
+          // Fallback inline content for file:// protocol testing
+          contentData = {
+            site: {
+              logo_url:
+                "https://res.cloudinary.com/dqwm4pdbz/image/upload/v1764372864/imprintic_logo_gmmf4a.png",
+            },
+            en: {
+              index: {
+                title: "A Beautiful Mind",
+                intro:
+                  "This the is silent, profound and touching struggle of a beautiful soul navigating a world that wasn't built for her. A reality defined by immense love, exhaustion, and the unwavering struggle to secure a path forward for Maya.",
+                subheadline: "Imagine",
+                body_text:
+                  "This story is an invitation to step quietly into a world that few outside our immediate family ever truly see: the relentless, often beautiful, and sometimes terrifying reality of parenting a child with severe autism. Our daughter is a beautiful soul. She is defined by an immense capacity for love, unexpected moments of radiant joy, and a spirit that continues to fight for connection. Yet, her life is also framed by struggles that demand constant, exhausting attention—struggles with communication, with sensory overload, and with behaviors that place her and us in perpetual crisis.",
+                page_url: "index.html",
+                next_story_link: "chapter1.html",
+                media: {
+                  url: "https://res.cloudinary.com/dqwm4pdbz/video/upload/v1764369265/SoH-Intro_seglsu.webm",
+                  type: "video",
+                  size_percentage: 50,
+                  caption: "A Beautiful Mind",
+                  use_soft_bg: false,
+                },
+                chapters: [
+                  {
+                    id: "chapter1",
+                    title: "A Day in Our Life",
+                    description: "Read about our initial concept and goals.",
+                  },
+                  {
+                    id: "chapter2",
+                    title: "Chapter 2: Data & Impact",
+                    description: "View the supporting metrics and evidence.",
+                  },
+                ],
+              },
+            },
+          };
         }
-
-        // Call the shared content injection function
         injectIndexContent(currentLang);
       }
 
@@ -52,6 +86,10 @@
 
         const pageData = langData[PAGE_ID];
         if (!pageData) return;
+
+        console.debug("injectIndexContent pageData:", pageData);
+        console.debug("media field:", pageData.media);
+        console.debug("image field:", pageData.image);
 
         // 1. Set Page Title (Browser tab title) and Visible Main Headline
         const pageTitleElement = document.getElementById("page-title");
@@ -91,6 +129,9 @@
         const imgContainer = document.getElementById("image-container");
         const mediaData = pageData.media || pageData.image; // fallback to image field for backwards compatibility
 
+        console.debug("imgContainer found:", !!imgContainer);
+        console.debug("mediaData:", mediaData);
+
         if (imgContainer && mediaData) {
           // Conditional soft background logic
           if (mediaData.use_soft_bg) {
@@ -104,12 +145,7 @@
 
           if (mediaType === "video") {
             mediaHTML = `
-                    <video
-                        width="100%"
-                        controls
-                        style="width: 100%; height: auto; display: block; border-radius: 8px;"
-                        alt="${mediaData.caption}"
-                    >
+                    <video autoplay muted loop controls style="width: 100%; height: auto; display: block; border-radius: 8px;">
                         <source src="${mediaData.url}" type="video/webm">
                         Your browser does not support the video tag.
                     </video>
@@ -136,8 +172,15 @@
 
           // Set the media's width relative to the text using flex-basis
           imgContainer.style.flexBasis = mediaData.size_percentage + "%";
+          console.debug(
+            "Media rendered successfully. Type:",
+            mediaType,
+            "HTML:",
+            mediaHTML
+          );
         } else if (imgContainer) {
           imgContainer.style.display = "none";
+          console.warn("No media data found for page");
         }
 
         // 4. Inject Intro Text

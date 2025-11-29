@@ -111,12 +111,7 @@
 
           if (mediaType === "video") {
             mediaHTML = `
-                    <video
-                        width="100%"
-                        controls
-                        style="width: 100%; height: auto; display: block; border-radius: 8px;"
-                        alt="${mediaData.caption}"
-                    >
+                    <video autoplay muted loop controls style="width: 100%; height: auto; display: block; border-radius: 8px;">
                         <source src="${mediaData.url}" type="video/webm">
                         Your browser does not support the video tag.
                     </video>
@@ -225,5 +220,26 @@
         <div class="story-text" id="story-text-content"></div>
       </div>
     </div>
+    <footer class="site-footer" role="contentinfo">
+      <div class="footer-inner">
+        <div class="footer-center">
+          <small>&copy; 2025 by</small>
+          <a
+            href="index.html"
+            class="footer-logo"
+            aria-label="Spectrum of Hope homepage"
+          >
+            <img
+              id="footer-logo-img"
+              src="https://res.cloudinary.com/dqwm4pdbz/image/upload/v1764372864/imprintic_logo_gmmf4a.png"
+              class="logo-img"
+              alt="Site logo"
+              loading="lazy"
+              onerror="this.style.display='none'"
+            />
+          </a>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>
