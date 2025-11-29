@@ -94,36 +94,55 @@
           navTop.innerHTML = navHTML;
         }
 
-        // 3. Inject Image and Caption
+        // 3. Inject Media (Image or Video) and Caption
         const imgContainer = document.getElementById("image-container");
-        const imgData = pageData.image;
+        const mediaData = pageData.media || pageData.image; // fallback to image field for backwards compatibility
 
-        if (imgContainer && imgData) {
+        if (imgContainer && mediaData) {
           // Conditional soft background logic
-          if (imgData.use_soft_bg) {
+          if (mediaData.use_soft_bg) {
             imgContainer.classList.add("soft-background-image");
           } else {
             imgContainer.classList.remove("soft-background-image");
           }
 
-          // Flexible replacement for JPG or PNG to generate WebP URL
-          const webpUrl = imgData.url.replace(/\.(jpe?g|png)$/i, ".webp");
+          let mediaHTML = "";
+          const mediaType = mediaData.type || "image"; // default to image if type not specified
 
-          const imgHTML = `
+          if (mediaType === "video") {
+            mediaHTML = `
+                    <video
+                        width="100%"
+                        controls
+                        style="width: 100%; height: auto; display: block; border-radius: 8px;"
+                        alt="${mediaData.caption}"
+                    >
+                        <source src="${mediaData.url}" type="video/webm">
+                        Your browser does not support the video tag.
+                    </video>
+                    <figcaption>${mediaData.caption}</figcaption>
+                `;
+          } else {
+            // Image rendering
+            const webpUrl = mediaData.url.replace(/\.(jpe?g|png)$/i, ".webp");
+
+            mediaHTML = `
                     <picture>
                         <source srcset="${webpUrl}" type="image/webp">
                         <img
-                            src="${imgData.url}"
-                            alt="${imgData.caption}"
+                            src="${mediaData.url}"
+                            alt="${mediaData.caption}"
                             style="width: 100%;"
                         >
                     </picture>
-                    <figcaption>${imgData.caption}</figcaption>
+                    <figcaption>${mediaData.caption}</figcaption>
                 `;
-          imgContainer.innerHTML = imgHTML;
+          }
 
-          // Set the image's width relative to the text using flex-basis (for desktop)
-          imgContainer.style.flexBasis = imgData.size_percentage + "%";
+          imgContainer.innerHTML = mediaHTML;
+
+          // Set the media's width relative to the text using flex-basis (for desktop)
+          imgContainer.style.flexBasis = mediaData.size_percentage + "%";
         } else if (imgContainer) {
           imgContainer.style.display = "none";
         }

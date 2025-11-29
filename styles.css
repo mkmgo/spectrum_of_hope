@@ -133,6 +133,13 @@ a:hover {
   border-radius: 8px;
 }
 
+.story-media video {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+}
+
 .story-media figcaption {
   font-style: italic;
   font-size: 0.9em;

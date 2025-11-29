@@ -15,8 +15,9 @@
       "body_text": "This story is an invitation to step quietly into a world that few outside our immediate family ever truly see: the relentless, often beautiful, and sometimes terrifying reality of parenting a child with severe autism. Our daughter is a beautiful soul. She is defined by an immense capacity for love, unexpected moments of radiant joy, and a spirit that continues to fight for connection. Yet, her life is also framed by struggles that demand constant, exhausting attention—struggles with communication, with sensory overload, and with behaviors that place her and us in perpetual crisis. ",
       "page_url": "index.html",
       "next_story_link": "chapter1.html",
-      "image": {
-        "url": "https://res.cloudinary.com/dqwm4pdbz/image/upload/v1763998481/Spectrum_of_Hope_ch4aic.jpg",
+      "media": {
+        "url": "https://res.cloudinary.com/dqwm4pdbz/video/upload/v1764369265/SoH-Intro_seglsu.webm",
+        "type": "video",
         "size_percentage": 50,
         "caption": "A Beautiful Mind",
         "use_soft_bg": false
@@ -39,8 +40,9 @@
       "page_url": "chapter1.html",
       "prev_story_link": "index.html",
       "next_story_link": "chapter2.html",
-      "image": {
+      "media": {
         "url": "https://res.cloudinary.com/dqwm4pdbz/image/upload/v1764176938/Spectrum_of_Hope_4_vblw7s.jpg",
+        "type": "image",
         "size_percentage": 50,
         "caption": "The first visual illustrating the core concept.",
         "use_soft_bg": false
@@ -74,8 +76,9 @@
       "page_url": "chapter2.html",
       "prev_story_link": "chapter1.html",
       "next_story_link": null,
-      "image": {
+      "media": {
         "url": "https://res.cloudinary.com/dqwm4pdbz/image/upload/v1764208163/3_nrr0ke.png",
+        "type": "image",
         "size_percentage": 50,
         "caption": "Statistics showing our primary results.",
         "use_soft_bg": true
@@ -106,8 +109,9 @@
       "body_text": "Die Kampagne konzentriert sich auf drei Hauptpfeiler: Sensibilisierung, Sicherung langfristiger Pflegefinanzierung und Entwicklung von Bildungsressourcen für andere Familien mit ähnlichen Herausforderungen. Wir glauben an aktive Hoffnung.",
       "page_url": "index.html",
       "next_story_link": "chapter1.html",
-      "image": {
+      "media": {
         "url": "YOUR_CLOUDINARY_INDEX_IMAGE_URL.jpg",
+        "type": "image",
         "size_percentage": 100,
         "caption": "Das Hauptbild für den Kampagnenstart.",
         "use_soft_bg": false
@@ -130,8 +134,9 @@
       "page_url": "chapter1.html",
       "prev_story_link": "index.html",
       "next_story_link": "chapter2.html",
-      "image": {
+      "media": {
         "url": "YOUR_CLOUDINARY_CHAPTER1_URL.jpg",
+        "type": "image",
         "size_percentage": 40,
         "caption": "Das erste Bild, das das Kernkonzept veranschaulicht.",
         "use_soft_bg": false
@@ -164,8 +169,9 @@
       "page_url": "chapter2.html",
       "prev_story_link": "chapter1.html",
       "next_story_link": null,
-      "image": {
+      "media": {
         "url": "YOUR_CLOUDINARY_CHAPTER2_URL.jpg",
+        "type": "image",
         "size_percentage": 60,
         "caption": "Statistiken, die unsere primären Ergebnisse zeigen.",
         "use_soft_bg": false
