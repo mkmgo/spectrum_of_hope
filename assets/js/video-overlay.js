@@ -1,4 +1,13 @@
 (function () {
+  /*************  ✨ Windsurf Command ⭐  *************/
+  /**
+   * Adds a video playback control overlay to a container element
+   * @param {HTMLElement} container - The container element to add the overlay to
+   * @param {HTMLVideoElement} video - The video element to add the overlay to
+   * @throws {Error} If the container or video element is not found
+   */
+
+  /*******  4ce06ef1-092f-460f-a271-c60dc9bf47d1  *******/
   function showVideoPlayOverlay(container, video) {
     try {
       if (!container || !video) return;
