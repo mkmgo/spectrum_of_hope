@@ -82,21 +82,12 @@
    * Tries Cloudinary transformation URLs first, then fallback filename variants.
    * Returns a Promise resolving to true if replaced, false otherwise.
    */
-function attemptAnimatedImageFallback(
-  container,
-  video,
-  mediaUrl,
-  caption,
-  animatedWebpUrl
-) {
-
-  // Check if the video's src attribute is the same as the alternative media link
-  if (video && video.src && video.src === mediaUrl) {
-    return Promise.resolve(false);
-  }
-
-  // Rest of the function...
-}
+  function attemptAnimatedImageFallback(
+    container,
+    video,
+    mediaUrl,
+    caption,
+    animatedWebpUrl
   ) {
     return new Promise((resolve) => {
       if (!container || !video || !mediaUrl) return resolve(false);
