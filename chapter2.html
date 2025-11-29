@@ -151,10 +151,22 @@
                 console.debug("Video autoplay blocked:", err);
                 if (window.attemptAnimatedImageFallback) {
                   const mediaUrl = mediaData && mediaData.url;
+                  const animatedWebpUrl = mediaData && mediaData.animated_webp_url;
                   window
-                    .attemptAnimatedImageFallback(imgContainer, video, mediaUrl, mediaData && mediaData.caption)
+                    .attemptAnimatedImageFallback(
+                      imgContainer,
+                      video,
+                      mediaUrl,
+                      mediaData && mediaData.caption,
+                      animatedWebpUrl
+                    )
                     .then((replaced) => {
-                      if (!replaced) showVideoPlayOverlay(imgContainer, video);
+                      if (!replaced) {
+                        console.debug("Animated fallback not available; showing overlay");
+                        showVideoPlayOverlay(imgContainer, video);
+                      } else {
+                        console.debug("Animated fallback loaded successfully");
+                      }
                     })
                     .catch(() => showVideoPlayOverlay(imgContainer, video));
                 } else {

@@ -20,7 +20,8 @@
         "type": "video",
         "size_percentage": 50,
         "caption": "A Beautiful Mind",
-        "use_soft_bg": false
+        "use_soft_bg": false,
+        "animated_webp_url": "https://res.cloudinary.com/dqwm4pdbz/video/upload/f_webp,q_auto:eco/v1764369265/SoH-Intro_seglsu"
       },
       "chapters": [
         {

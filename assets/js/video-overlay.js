@@ -76,38 +76,74 @@
 
   // expose globally
   window.showVideoPlayOverlay = showVideoPlayOverlay;
-  
+
   /**
    * Try to replace a blocked video with an animated image fallback (WebP, then GIF).
+   * Tries Cloudinary transformation URLs first, then fallback filename variants.
    * Returns a Promise resolving to true if replaced, false otherwise.
    */
-  function attemptAnimatedImageFallback(container, video, mediaUrl, caption) {
+  function attemptAnimatedImageFallback(
+    container,
+    video,
+    mediaUrl,
+    caption,
+    animatedWebpUrl
+  ) {
     return new Promise((resolve) => {
       if (!container || !video || !mediaUrl) return resolve(false);
 
-      // Candidate animated image URLs (try WebP first, then GIF)
-      const candidates = [
-        mediaUrl.replace(/\.webm$/i, '.webp'),
-        mediaUrl.replace(/\.webm$/i, '.gif'),
-      ];
+      console.debug(
+        "attemptAnimatedImageFallback: trying to replace blocked video",
+        mediaUrl
+      );
+
+      // Candidate animated image URLs
+      const candidates = [];
+
+      // If explicit animated WebP URL provided (best case), try first
+      if (animatedWebpUrl) candidates.push(animatedWebpUrl);
+
+      // Try Cloudinary transformations (e.g., convert webm to animated webp via CDN)
+      if (mediaUrl.includes("cloudinary")) {
+        candidates.push(
+          mediaUrl
+            .replace(/\/upload\//i, "/upload/f_webp,q_auto:eco/")
+            .replace(/\.webm$/i, "")
+        );
+      }
+
+      // Fallback to simple filename swaps
+      candidates.push(mediaUrl.replace(/\.webm$/i, ".webp"));
+      candidates.push(mediaUrl.replace(/\.webm$/i, ".gif"));
 
       let tried = 0;
 
       function tryNext() {
-        if (tried >= candidates.length) return resolve(false);
+        if (tried >= candidates.length) {
+          console.debug(
+            "attemptAnimatedImageFallback: all candidates exhausted"
+          );
+          return resolve(false);
+        }
         const url = candidates[tried++];
+        console.debug(
+          `attemptAnimatedImageFallback: trying candidate ${tried}/${candidates.length}: ${url}`
+        );
         const img = new Image();
         img.onload = function () {
+          console.debug(
+            "attemptAnimatedImageFallback: candidate loaded successfully"
+          );
           try {
             // Remove video element and insert animated image
             if (video && video.parentNode) video.parentNode.removeChild(video);
-            img.alt = caption || '';
-            img.className = 'animated-fallback';
-            img.style.width = '100%';
-            img.style.height = 'auto';
-            img.loading = 'eager';
+            img.alt = caption || "";
+            img.className = "animated-fallback";
+            img.style.width = "100%";
+            img.style.height = "auto";
+            img.loading = "eager";
             // Insert into container (prefer before figcaption if present)
-            const figcap = container.querySelector('figcaption');
+            const figcap = container.querySelector("figcaption");
             if (figcap) container.insertBefore(img, figcap);
             else container.appendChild(img);
             resolve(true);
