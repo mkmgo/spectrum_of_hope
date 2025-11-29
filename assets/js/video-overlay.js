@@ -82,6 +82,7 @@
    * Tries Cloudinary transformation URLs first, then fallback filename variants.
    * Returns a Promise resolving to true if replaced, false otherwise.
    */
+
 function attemptAnimatedImageFallback(
   container,
   video,
@@ -122,10 +123,11 @@ function attemptAnimatedImageFallback(
       // Remove the fallback message on mobile devices
       const fallbackMessageElement = container.querySelector(".fallback-message");
       if (fallbackMessageElement) {
-        fallbackMessageElement.remove();
+        fallbackMessageElement.style.display = "none";
       }
     }
   });
+}
 }      function tryNext() {
         if (tried >= candidates.length) {
           console.debug(
