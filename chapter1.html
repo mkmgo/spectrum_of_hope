@@ -151,7 +151,17 @@
             if (video) {
               video.play().catch((err) => {
                 console.debug("Video autoplay blocked:", err);
-                showVideoPlayOverlay(imgContainer, video);
+                if (window.attemptAnimatedImageFallback) {
+                  const mediaUrl = mediaData && mediaData.url;
+                  window
+                    .attemptAnimatedImageFallback(imgContainer, video, mediaUrl, mediaData && mediaData.caption)
+                    .then((replaced) => {
+                      if (!replaced) showVideoPlayOverlay(imgContainer, video);
+                    })
+                    .catch(() => showVideoPlayOverlay(imgContainer, video));
+                } else {
+                  showVideoPlayOverlay(imgContainer, video);
+                }
               });
             }
           }
