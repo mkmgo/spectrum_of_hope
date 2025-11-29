@@ -132,6 +132,7 @@
           } catch (e) {}
           return resolve(false);
         }
+
         const url = candidates[tried++];
         console.debug(
           `attemptAnimatedImageFallback: trying candidate ${tried}/${candidates.length}: ${url}`
@@ -155,22 +156,31 @@
           /* ignore DOM badge errors */
         }
 
-        const img = new Image();
-        img.onload = function () {
-          console.debug(
-            "attemptAnimatedImageFallback: candidate loaded successfully"
-          );
-          try {
-            // Remove original video element
-            if (video && video.parentNode) video.parentNode.removeChild(video);
+        // Determine if this is a video (MP4) or image (WebP/GIF)
+        const isVideo = /\.mp4$/i.test(url);
 
-            // Determine if this is a video (MP4) or image (WebP/GIF)
-            const isVideo = /\.mp4$/i.test(url);
-            let element;
+        if (isVideo) {
+          // For MP4, test by creating a video element and checking if it loads
+          const testVid = document.createElement("video");
+          testVid.src = url;
+          testVid.muted = true;
+          testVid.crossOrigin = "anonymous";
 
-            if (isVideo) {
+          let loaded = false;
+
+          const onCanPlay = function () {
+            if (loaded) return; // Prevent multiple fires
+            loaded = true;
+            console.debug(
+              "attemptAnimatedImageFallback: video candidate ready to play"
+            );
+            cleanup();
+            try {
+              // Remove original video element
+              if (video && video.parentNode) video.parentNode.removeChild(video);
+
               // Create a looping video element for MP4
-              element = document.createElement("video");
+              const element = document.createElement("video");
               element.autoplay = true;
               element.muted = true;
               element.loop = true;
@@ -187,42 +197,107 @@
               source.src = url;
               source.type = "video/mp4";
               element.appendChild(source);
-            } else {
+              const figcap = container.querySelector("figcaption");
+              if (figcap) container.insertBefore(element, figcap);
+              else container.insertBefore(element, container.firstChild);
+
+              try {
+                const dbg = container.querySelector(".fallback-debug");
+                if (dbg) dbg.textContent = "Animated fallback loaded";
+              } catch (e) {}
+              resolve(true);
+            } catch (err) {
+              console.error(
+                "attemptAnimatedImageFallback: error creating video element",
+                err
+              );
+              tryNext();
+            }
+          };
+
+          const onError = function () {
+            console.debug(
+              "attemptAnimatedImageFallback: video candidate failed to load"
+            );
+            cleanup();
+            tryNext();
+          };
+
+          const cleanup = function () {
+            testVid.removeEventListener("canplay", onCanPlay);
+            testVid.removeEventListener("error", onError);
+          };
+
+          testVid.addEventListener("canplay", onCanPlay);
+          testVid.addEventListener("error", onError);
+
+          // Set a timeout in case video loading stalls
+          const timeoutId = setTimeout(function () {
+            if (!loaded && testVid.readyState === 0) {
+              // Not started loading
+              console.debug(
+                "attemptAnimatedImageFallback: video candidate timeout"
+              );
+              cleanup();
+              tryNext();
+            }
+          }, 5000);
+
+          testVid.addEventListener("canplay", function () {
+            clearTimeout(timeoutId);
+          });
+        } else {
+          // For images (WebP/GIF), use Image object
+          const img = new Image();
+          img.crossOrigin = "anonymous";
+
+          img.onload = function () {
+            console.debug(
+              "attemptAnimatedImageFallback: image candidate loaded successfully"
+            );
+            try {
+              // Remove original video element
+              if (video && video.parentNode) video.parentNode.removeChild(video);
+
               // Use img element for image formats (WebP/GIF)
-              element = img;
               img.alt = caption || "";
               img.className = "animated-fallback";
               img.style.width = "100%";
               img.style.height = "auto";
               img.loading = "eager";
+              img.style.display = "block";
+              img.style.borderRadius = "8px";
+              img.style.maxWidth = "100%";
+
+              // Insert into container (prefer before figcaption if present)
+              const figcap = container.querySelector("figcaption");
+              if (figcap) container.insertBefore(img, figcap);
+              else container.insertBefore(img, container.firstChild);
+
+              try {
+                const dbg = container.querySelector(".fallback-debug");
+                if (dbg) dbg.textContent = "Animated fallback loaded";
+              } catch (e) {}
+              resolve(true);
+            } catch (e) {
+              console.debug(
+                "attemptAnimatedImageFallback: insertion failed, trying next",
+                e
+              );
+              tryNext();
             }
+          };
 
-            // Insert into container (prefer before figcaption if present)
-            const figcap = container.querySelector("figcaption");
-            if (figcap) container.insertBefore(element, figcap);
-            else container.appendChild(element);
-
-            try {
-              const dbg = container.querySelector(".fallback-debug");
-              if (dbg) dbg.textContent = "Animated fallback loaded";
-            } catch (e) {}
-            return resolve(true);
-          } catch (e) {
+          img.onerror = function () {
             console.debug(
-              "attemptAnimatedImageFallback: insertion failed, trying next",
-              e
+              "attemptAnimatedImageFallback: image candidate failed to load",
+              url
             );
             tryNext();
-          }
-        };
-        img.onerror = function () {
-          console.debug(
-            "attemptAnimatedImageFallback: candidate failed to load",
-            url
-          );
-          tryNext();
-        };
-        img.src = url;
+          };
+
+          img.src = url;
+        }
       }
 
       tryNext();
