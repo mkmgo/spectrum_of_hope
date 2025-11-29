@@ -138,6 +138,8 @@ a:hover {
   height: auto;
   display: block;
   border-radius: 8px;
+  max-width: 100%;
+  object-fit: contain;
 }
 
 .story-media figcaption {
