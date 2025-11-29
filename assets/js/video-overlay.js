@@ -112,6 +112,9 @@
         );
       }
 
+      // Try MP4 as animated fallback (loops natively on mobile with autoplay muted loop)
+      candidates.push(mediaUrl.replace(/\.webm$/i, ".mp4"));
+
       // Fallback to simple filename swaps
       candidates.push(mediaUrl.replace(/\.webm$/i, ".webp"));
       candidates.push(mediaUrl.replace(/\.webm$/i, ".gif"));
@@ -158,17 +161,47 @@
             "attemptAnimatedImageFallback: candidate loaded successfully"
           );
           try {
-            // Remove video element and insert animated image
+            // Remove original video element
             if (video && video.parentNode) video.parentNode.removeChild(video);
-            img.alt = caption || "";
-            img.className = "animated-fallback";
-            img.style.width = "100%";
-            img.style.height = "auto";
-            img.loading = "eager";
+
+            // Determine if this is a video (MP4) or image (WebP/GIF)
+            const isVideo = /\.mp4$/i.test(url);
+            let element;
+
+            if (isVideo) {
+              // Create a looping video element for MP4
+              element = document.createElement("video");
+              element.autoplay = true;
+              element.muted = true;
+              element.loop = true;
+              element.playsinline = true;
+              element.preload = "metadata";
+              element.className = "animated-fallback";
+              element.style.width = "100%";
+              element.style.height = "auto";
+              element.style.display = "block";
+              element.style.borderRadius = "8px";
+              element.style.maxWidth = "100%";
+              element.style.objectFit = "contain";
+              const source = document.createElement("source");
+              source.src = url;
+              source.type = "video/mp4";
+              element.appendChild(source);
+            } else {
+              // Use img element for image formats (WebP/GIF)
+              element = img;
+              img.alt = caption || "";
+              img.className = "animated-fallback";
+              img.style.width = "100%";
+              img.style.height = "auto";
+              img.loading = "eager";
+            }
+
             // Insert into container (prefer before figcaption if present)
             const figcap = container.querySelector("figcaption");
-            if (figcap) container.insertBefore(img, figcap);
-            else container.appendChild(img);
+            if (figcap) container.insertBefore(element, figcap);
+            else container.appendChild(element);
+
             try {
               const dbg = container.querySelector(".fallback-debug");
               if (dbg) dbg.textContent = "Animated fallback loaded";
