@@ -116,7 +116,7 @@ function attemptAnimatedImageFallback(
       // Remove the fallback message on mobile devices
       const fallbackMessageElement = container.querySelector(".fallback-message");
       if (fallbackMessageElement) {
-        fallbackMessageElement.remove();
+        fallbackMessageElement.style.display = "none";
       }
 
       // Resolve the promise with the result
@@ -125,10 +125,21 @@ function attemptAnimatedImageFallback(
       // If it's not a mobile device, use the original media
       // Rest of the code for non-mobile devices
       // ...
+
+      // Create the fallback message element
+      const fallbackMessage = document.createElement("div");
+      fallbackMessage.className = "fallback-message";
+      fallbackMessage.innerHTML = "This video is not available on mobile devices.";
+
+      // Append the fallback message to the container
+      container.appendChild(fallbackMessage);
+
+      // Resolve the promise with the result
+      resolve(false);
     }
   });
-
 }
+
 }      function tryNext() {
         if (tried >= candidates.length) {
           console.debug(
@@ -311,8 +322,11 @@ function attemptAnimatedImageFallback(
       }
 
       tryNext();
-    });
-  }
 
-  window.attemptAnimatedImageFallback = attemptAnimatedImageFallback;
-})();
+ // Create the fallback message element
+const fallbackMessage = document.createElement("div");
+fallbackMessage.className = "fallback-message";
+fallbackMessage.innerHTML = "This video is not available on mobile devices.";
+
+// Append the fallback message to the container
+container.appendChild(fallbackMessage);
