@@ -151,7 +151,8 @@
                 console.debug("Video autoplay blocked:", err);
                 if (window.attemptAnimatedImageFallback) {
                   const mediaUrl = mediaData && mediaData.url;
-                  const animatedWebpUrl = mediaData && mediaData.animated_webp_url;
+                  const animatedWebpUrl =
+                    mediaData && mediaData.animated_webp_url;
                   window
                     .attemptAnimatedImageFallback(
                       imgContainer,
@@ -162,7 +163,9 @@
                     )
                     .then((replaced) => {
                       if (!replaced) {
-                        console.debug("Animated fallback not available; showing overlay");
+                        console.debug(
+                          "Animated fallback not available; showing overlay"
+                        );
                         showVideoPlayOverlay(imgContainer, video);
                       } else {
                         console.debug("Animated fallback loaded successfully");
