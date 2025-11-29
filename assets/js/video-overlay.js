@@ -82,46 +82,51 @@
    * Tries Cloudinary transformation URLs first, then fallback filename variants.
    * Returns a Promise resolving to true if replaced, false otherwise.
    */
-  function attemptAnimatedImageFallback(
-    container,
-    video,
-    mediaUrl,
-    caption,
-    animatedWebpUrl
-  ) {
-    return new Promise((resolve) => {
-      if (!container || !video || !mediaUrl) return resolve(false);
+function attemptAnimatedImageFallback(
+  container,
+  video,
+  mediaUrl,
+  caption,
+  animatedWebpUrl
+) {
+  return new Promise((resolve) => {
+    if (!container || !video || !mediaUrl) return resolve(false);
 
-      console.debug(
-        "attemptAnimatedImageFallback: trying to replace blocked video",
-        mediaUrl
-      );
+    console.debug(
+      "attemptAnimatedImageFallback: trying to replace blocked video",
+      mediaUrl
+    );
 
-      // Candidate animated image URLs
-      const candidates = [];
+    // Check if the user agent is a mobile device
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-      // If explicit animated WebP URL provided (best case), try first
-      if (animatedWebpUrl) candidates.push(animatedWebpUrl);
+    // If it's a mobile device, use the alternative media
+    if (isMobile) {
+      // Use the alternative media URL
+      const alternativeMediaUrl = mediaUrl.replace(/\.webm$/i, ".mp4");
 
-      // Try Cloudinary transformations (e.g., convert webm to animated webp via CDN)
-      if (mediaUrl.includes("cloudinary")) {
-        candidates.push(
-          mediaUrl
-            .replace(/\/upload\//i, "/upload/f_webp,q_auto:eco/")
-            .replace(/\.webm$/i, "")
-        );
+      // Create a new video element with the alternative media URL
+      const alternativeVideo = document.createElement("video");
+      alternativeVideo.src = alternativeMediaUrl;
+
+      // Set the alternative video as the new video element
+      container.replaceChild(alternativeVideo, video);
+
+      // Resolve the promise with the result
+      resolve(true);
+    } else {
+      // If it's not a mobile device, use the original media
+      // Rest of the code for non-mobile devices
+      // ...
+
+      // Remove the fallback message on mobile devices
+      const fallbackMessageElement = container.querySelector(".fallback-message");
+      if (fallbackMessageElement) {
+        fallbackMessageElement.remove();
       }
-
-      // Try MP4 as animated fallback (loops natively on mobile with autoplay muted loop)
-      candidates.push(mediaUrl.replace(/\.webm$/i, ".mp4"));
-
-      // Fallback to simple filename swaps
-      candidates.push(mediaUrl.replace(/\.webm$/i, ".webp"));
-      candidates.push(mediaUrl.replace(/\.webm$/i, ".gif"));
-
-      let tried = 0;
-
-      function tryNext() {
+    }
+  });
+}      function tryNext() {
         if (tried >= candidates.length) {
           console.debug(
             "attemptAnimatedImageFallback: all candidates exhausted"
