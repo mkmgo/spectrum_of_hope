@@ -166,16 +166,17 @@
                     .then((replaced) => {
                       if (!replaced) {
                         console.debug(
-                          "Animated fallback not available; showing overlay"
+                          "Animated fallback not available"
                         );
-                        showVideoPlayOverlay(imgContainer, video);
                       } else {
                         console.debug("Animated fallback loaded successfully");
                       }
                     })
-                    .catch(() => showVideoPlayOverlay(imgContainer, video));
+                    .catch(() => {
+                      console.debug("Animated fallback attempt failed");
+                    });
                 } else {
-                  showVideoPlayOverlay(imgContainer, video);
+                  console.debug("No animated fallback URL provided");
                 }
               });
             }
