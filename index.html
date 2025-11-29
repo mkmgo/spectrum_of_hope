@@ -176,6 +176,17 @@
 
           // Set the media's width relative to the text using flex-basis
           imgContainer.style.flexBasis = mediaData.size_percentage + "%";
+
+          // Force video autoplay on mobile (browsers block autoplay until user interaction)
+          if (mediaType === "video") {
+            const video = imgContainer.querySelector("video");
+            if (video) {
+              video
+                .play()
+                .catch((err) => console.debug("Video autoplay blocked:", err));
+            }
+          }
+
           console.debug(
             "Media rendered successfully. Type:",
             mediaType,
