@@ -157,6 +157,32 @@
         }
       }
 
+      // Set footer logo from central site config (if present)
+      try {
+        const siteLogo =
+          contentData && contentData.site && contentData.site.logo_url;
+        const footerImg = document.getElementById("footer-logo-img");
+        const fallbackLogo =
+          "https://res.cloudinary.com/dqwm4pdbz/image/upload/v1764372864/imprintic_logo_gmmf4a.png";
+        console.debug(
+          "injectIndexContent: siteLogo=",
+          siteLogo,
+          "pageData.title=",
+          pageData && pageData.title
+        );
+        if (footerImg) {
+          footerImg.src = siteLogo || fallbackLogo;
+          footerImg.alt =
+            pageData && pageData.title ? pageData.title : "Site logo";
+          footerImg.loading = "lazy";
+          footerImg.onerror = function () {
+            this.style.display = "none";
+          };
+        }
+      } catch (e) {
+        console.warn("Footer logo injection failed", e);
+      }
+
       function switchLanguage(newLang) {
         if (contentData[newLang]) {
           localStorage.setItem("lang", newLang);
@@ -188,5 +214,26 @@
         </div>
       </div>
     </div>
+    <footer class="site-footer" role="contentinfo">
+      <div class="footer-inner">
+        <div class="footer-center">
+          <small>&copy; 2025 by</small>
+          <a
+            href="index.html"
+            class="footer-logo"
+            aria-label="Spectrum of Hope homepage"
+          >
+            <img
+              id="footer-logo-img"
+              src="https://res.cloudinary.com/dqwm4pdbz/image/upload/v1764372864/imprintic_logo_gmmf4a.png"
+              class="logo-img"
+              alt="Site logo"
+              loading="lazy"
+              onerror="this.style.display='none'"
+            />
+          </a>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>

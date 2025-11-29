@@ -4,6 +4,9 @@
     "supportedLanguages": ["en", "de"],
     "base_url": "/"
   },
+  "site": {
+    "logo_url": "https://res.cloudinary.com/dqwm4pdbz/image/upload/v1764372864/imprintic_logo_gmmf4a.png"
+  },
   "en": {
     "index": {
       "title": "A Beautiful Mind",

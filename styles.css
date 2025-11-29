@@ -1,264 +1,329 @@
 :root {
-    /* --- Default Light Mode Variables --- */
-    --bg-color: #f4f4f4;        /* Page background (pale gray) */
-    --text-color: #333333;      /* Dark text */
-    --block-bg: #ffffff;        /* Content block background (white) */
-    --border-color: #cccccc;
-    --accent-color: #007bff;    /* Blue for headlines/links */
-    --soft-image-bg: #fbfbfb;   
+  /* --- Default Light Mode Variables --- */
+  --bg-color: #f4f4f4; /* Page background (pale gray) */
+  --text-color: #333333; /* Dark text */
+  --block-bg: #ffffff; /* Content block background (white) */
+  --border-color: #cccccc;
+  --accent-color: #007bff; /* Blue for headlines/links */
+  --soft-image-bg: #fbfbfb;
 }
 
 body[data-theme="dark"] {
-    /* --- Dark Mode Overrides --- */
-    --bg-color: #121212;        /* Page background (dark gray) */
-    --text-color: #e0e0e0;      /* Light text */
-    --block-bg: #1e1e1e;        /* Content block background (darker gray) */
-    --border-color: #333333;
-    --accent-color: #4a90e2;    /* Lighter blue for dark contrast */
-    --soft-image-bg: #2c2c2c;   /* Contrast background for transparent images */
+  /* --- Dark Mode Overrides --- */
+  --bg-color: #121212; /* Page background (dark gray) */
+  --text-color: #e0e0e0; /* Light text */
+  --block-bg: #1e1e1e; /* Content block background (darker gray) */
+  --border-color: #333333;
+  --accent-color: #4a90e2; /* Lighter blue for dark contrast */
+  --soft-image-bg: #2c2c2c; /* Contrast background for transparent images */
 }
 
 /* --- Global Base Styles --- */
 body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-    margin: 0;
-    padding: 0;
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    transition: background-color 0.3s, color 0.3s;
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Make the page a column flex layout so footer can sit at the bottom */
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 /* --- Global Headline Styling --- */
-h1, h2, h3 {
-    margin-top: 1.5em;
-    margin-bottom: 0.5em;
-    color: var(--text-color); 
+h1,
+h2,
+h3 {
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  color: var(--text-color);
 }
 
 /* Apply accent color to all main story headlines (H1) and sub-headlines (H2, H3) */
-h1, .story-text h2, .story-text h3 {
-    color: var(--accent-color);
+h1,
+.story-text h2,
+.story-text h3 {
+  color: var(--accent-color);
 }
 
 a {
-    color: var(--accent-color);
-    text-decoration: none;
-    transition: color 0.3s;
+  color: var(--accent-color);
+  text-decoration: none;
+  transition: color 0.3s;
 }
 
 a:hover {
-    color: var(--accent-color);
-    text-decoration: underline;
+  color: var(--accent-color);
+  text-decoration: underline;
 }
 
 /* --- Container and Layout --- */
 .story-container {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  flex: 1 0 auto; /* allow container to grow so footer sits at bottom */
 }
 
 /* --- Language Switcher (Removed, but styles kept in case you put it back) --- */
 .language-switcher {
-    text-align: right;
-    padding: 10px 20px;
-    background-color: var(--block-bg);
-    border-bottom: 1px solid var(--border-color);
+  text-align: right;
+  padding: 10px 20px;
+  background-color: var(--block-bg);
+  border-bottom: 1px solid var(--border-color);
 }
 
 /* --- Chapter Page Contrast & Layout --- */
 
 .story-block {
-    display: flex;
-    flex-direction: column; /* CRITICAL: Ensures stacking on mobile */
-    padding: 20px 0;
+  display: flex;
+  flex-direction: column; /* CRITICAL: Ensures stacking on mobile */
+  padding: 20px 0;
 }
 
 .story-block .story-text {
-    /* CRUCIAL: Apply block background for contrast */
-    background-color: var(--block-bg); 
-    padding: 30px; 
-    border-radius: 8px; 
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-    border: 1px solid var(--border-color);
-    flex-grow: 2;
-    order: 2; /* 🛑 FIX: Text always comes AFTER the image 🛑 */
+  /* CRUCIAL: Apply block background for contrast */
+  background-color: var(--block-bg);
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--border-color);
+  flex-grow: 2;
+  order: 2; /* 🛑 FIX: Text always comes AFTER the image 🛑 */
 }
 
 /* Sequential Navigation Style */
 #chapter-nav-top {
-    background-color: var(--block-bg);
-    padding: 15px 20px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    text-align: center;
-    border: 1px solid var(--border-color);
+  background-color: var(--block-bg);
+  padding: 15px 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  text-align: center;
+  border: 2px solid var(--border-color);
 }
 
 #chapter-nav-top a {
-    font-weight: bold;
-    margin: 0 10px;
-    display: inline-block;
+  font-weight: bold;
+  margin: 0 10px;
+  display: inline-block;
 }
 
 /* --- Image Styling --- */
 .story-media {
-    /* Use flex shorthand for strict behavior on mobile */
-    flex: 0 0 auto; 
-    margin: 0 0 20px 0;
-    padding: 0;
-    width: 100%; /* Remains 100% width on mobile */
-    order: 1; /* 🛑 FIX: Image always comes FIRST 🛑 */
-/* 🛑 CRITICAL FIX FOR PADDING: Makes width include padding/border */
-    box-sizing: border-box; 
-}
-
+  /* Use flex shorthand for strict behavior on mobile */
+  flex: 0 0 auto;
+  margin: 0 0 20px 0;
+  padding: 0;
+  width: 100%; /* Remains 100% width on mobile */
+  order: 1; /* 🛑 FIX: Image always comes FIRST 🛑 */
+  /* 🛑 CRITICAL FIX FOR PADDING: Makes width include padding/border */
+  box-sizing: border-box;
 }
 
 .story-media img {
-    width: 100%;
-    height: auto;
-    display: block;
-    border-radius: 8px;
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
 }
 
 .story-media figcaption {
-    font-style: italic;
-    font-size: 0.9em;
-    color: var(--text-color);
-    opacity: 0.7;
-    margin-top: 5px;
-    text-align: left;
+  font-style: italic;
+  font-size: 0.9em;
+  color: var(--text-color);
+  opacity: 0.7;
+  margin-top: 5px;
+  text-align: left;
 }
 
 /* Conditional Soft Background for Images */
 .soft-background-image {
-    background-color: var(--soft-image-bg);
-    padding: 10px; 
-    border-radius: 8px; 
+  background-color: var(--soft-image-bg);
+  padding: 10px;
+  border-radius: 8px;
 }
 
 /* --- Nav Button Styles (PayPal, Download) --- */
-.paypal-button, .download-link {
-    display: inline-block;
-    background-color: var(--accent-color); 
-    color: var(--block-bg); 
-    padding: 10px 25px;
-    margin: 15px 10px 15px 0;
-    text-decoration: none;
-    font-weight: bold;
-    border-radius: 5px;
-    transition: background-color 0.3s;
+.paypal-button,
+.download-link {
+  display: inline-block;
+  background-color: var(--accent-color);
+  color: var(--block-bg);
+  padding: 10px 25px;
+  margin: 15px 10px 15px 0;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 5px;
+  transition: background-color 0.3s;
 }
 
-.paypal-button:hover, .download-link:hover {
-    background-color: #0056b3; 
+.paypal-button:hover,
+.download-link:hover {
+  background-color: #0056b3;
 }
 
 /* --- Responsive Layout (Side-by-Side on Desktop) --- */
 @media (min-width: 768px) {
-    .story-block {
-        flex-direction: row; 
-        align-items: flex-start;
-        gap: 30px;
-        padding: 20px; 
-    }
-    
-    .story-media {
-        /* 🛑 CRITICAL FIX for Chapter Pages: Ensure the image block respects the flex-basis percentage */
-        flex-grow: 0;   /* Do not grow past the percentage */
-        flex-shrink: 0; /* Do not shrink below the percentage */
-        flex-basis: auto; /* Let the JS-injected style override this with the percentage */
-        margin: 0;
-    }
+  .story-block {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 30px;
+    padding: 20px;
+  }
 
-    .story-text {
-        flex-grow: 1;
-        /* The min-width is permanently removed here to allow dynamic sizing. */
-    }
-    
-    /* --- INDEX PAGE SPECIFIC OVERRIDES (Ensure index sizing still works) --- */
-    .index-page .story-text {
-        min-width: initial;
-        flex-basis: auto;
-        flex-grow: 1;
-    }
+  .story-media {
+    /* 🛑 CRITICAL FIX for Chapter Pages: Ensure the image block respects the flex-basis percentage */
+    flex-grow: 0; /* Do not grow past the percentage */
+    flex-shrink: 0; /* Do not shrink below the percentage */
+    flex-basis: auto; /* Let the JS-injected style override this with the percentage */
+    margin: 0;
+  }
 
-    .index-page .story-media {
-        flex-grow: 0;
-        flex-shrink: 0;
-    }
+  .story-text {
+    flex-grow: 1;
+    /* The min-width is permanently removed here to allow dynamic sizing. */
+  }
+
+  /* --- INDEX PAGE SPECIFIC OVERRIDES (Ensure index sizing still works) --- */
+  .index-page .story-text {
+    min-width: initial;
+    flex-basis: auto;
+    flex-grow: 1;
+  }
+
+  .index-page .story-media {
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
 }
 
 /* --- INDEX PAGE SPECIFIC STYLING --- */
 .index-page .story-text {
-    /* DELETE THESE: */
-    /* background-color: initial; */ 
-    /* padding: initial; */
-    /* border-radius: initial; */
-    /* box-shadow: initial; */
-    /* border: initial; */
-    
-    text-align: left; 
-    
-    /* DELETE THIS: */
-    /* padding-top: 40px; */ 
+  /* DELETE THESE: */
+  /* background-color: initial; */
+  /* padding: initial; */
+  /* border-radius: initial; */
+  /* box-shadow: initial; */
+  /* border: initial; */
+
+  text-align: left;
+
+  /* DELETE THIS: */
+  /* padding-top: 40px; */
 }
 
 .index-page h1 {
-    font-size: 2.5em;
-    margin-bottom: 0.2em;
-    color: var(--accent-color);
-    text-align: left;
+  font-size: 2.5em;
+  margin-bottom: 0.2em;
+  color: var(--accent-color);
+  text-align: left;
 }
 
 .index-page .story-intro {
-    font-size: 1.1em;
-    margin-top: 10px;
-    margin-bottom: 30px;
-    text-align: left;
+  font-size: 1.1em;
+  margin-top: 10px;
+  margin-bottom: 30px;
+  text-align: left;
 }
 
 .index-page .campaign-nav ul {
-    list-style: none;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
-    gap: 20px;
-    justify-content: center;
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+  justify-content: center;
 }
 
 .index-page .campaign-nav a {
-    display: block;
-    padding: 20px;
-    border: 2px solid var(--border-color);
-    border-radius: 8px;
-    transition: all 0.3s;
-    background-color: var(--block-bg);
-    color: var(--text-color);
-    text-align: left;
+  display: block;
+  padding: 20px;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  transition: all 0.3s;
+  background-color: var(--block-bg);
+  color: var(--text-color);
+  text-align: left;
 }
 
 .index-page .campaign-nav a:hover {
-    border-color: var(--accent-color);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transform: translateY(-2px);
+  border-color: var(--accent-color);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
 
 .index-page .campaign-nav h2 {
-    margin-top: 0;
-    margin-bottom: 5px;
-    font-size: 1.4em;
-    color: var(--accent-color);
+  margin-top: 0;
+  margin-bottom: 5px;
+  font-size: 1.4em;
+  color: var(--accent-color);
 }
 
 .index-page .campaign-nav p {
-    font-size: 0.9em;
-    opacity: 0.8;
+  font-size: 0.9em;
+  opacity: 0.8;
 }
 
 .index-page .index-media {
-    margin-bottom: 30px;
-    width: 100%; 
+  margin-bottom: 30px;
+  width: 100%;
+}
+
+/* --- Footer Styling --- */
+.site-footer {
+  background: var(--block-bg);
+  border-top: 1px solid var(--border-color);
+  padding: 14px 20px;
+  width: 100%;
+}
+
+.site-footer .footer-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* center the copyright + logo */
+  gap: 12px;
+}
+
+.footer-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--text-color);
+  font-weight: bold;
+}
+
+.logo-img {
+  height: 16px; /* slightly smaller */
+  width: auto; /* preserve the image's original aspect ratio */
+  display: block;
+}
+
+.logo-text {
+  display: inline-block;
+}
+
+.site-footer small {
+  color: var(--text-color);
+  opacity: 0.8;
+}
+
+@media (max-width: 560px) {
+  .site-footer .footer-inner {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .logo-text {
+    font-size: 0.95em;
+  }
 }
