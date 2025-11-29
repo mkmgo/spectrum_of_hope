@@ -120,15 +120,36 @@
 
       function tryNext() {
         if (tried >= candidates.length) {
-          console.debug(
-            "attemptAnimatedImageFallback: all candidates exhausted"
-          );
+          console.debug("attemptAnimatedImageFallback: all candidates exhausted");
+          try {
+            const dbg = container.querySelector(".fallback-debug");
+            if (dbg) dbg.textContent = "No animated fallback available";
+          } catch (e) {}
           return resolve(false);
         }
         const url = candidates[tried++];
         console.debug(
           `attemptAnimatedImageFallback: trying candidate ${tried}/${candidates.length}: ${url}`
         );
+
+        // update (or create) visible debug badge inside the container for mobile troubleshooting
+        try {
+          let dbg = container.querySelector(".fallback-debug");
+          if (!dbg) {
+            dbg = document.createElement("div");
+            dbg.className = "fallback-debug";
+            dbg.setAttribute("aria-hidden", "true");
+            // ensure container is positioned for absolute badge
+            const cStyle = window.getComputedStyle(container);
+            if (cStyle.position === "static" || !cStyle.position)
+              container.style.position = "relative";
+            container.appendChild(dbg);
+          }
+          dbg.textContent = `Trying: ${url}`;
+        } catch (e) {
+          /* ignore DOM badge errors */
+        }
+
         const img = new Image();
         img.onload = function () {
           console.debug(
@@ -146,16 +167,26 @@
             const figcap = container.querySelector("figcaption");
             if (figcap) container.insertBefore(img, figcap);
             else container.appendChild(img);
-            resolve(true);
+            try {
+              const dbg = container.querySelector(".fallback-debug");
+              if (dbg) dbg.textContent = "Animated fallback loaded";
+            } catch (e) {}
+            return resolve(true);
           } catch (e) {
-            resolve(false);
+            console.debug(
+              "attemptAnimatedImageFallback: insertion failed, trying next",
+              e
+            );
+            tryNext();
           }
         };
         img.onerror = function () {
-          // try next candidate
+          console.debug(
+            "attemptAnimatedImageFallback: candidate failed to load",
+            url
+          );
           tryNext();
         };
-        // Kick off load
         img.src = url;
       }
 

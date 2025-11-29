@@ -193,6 +193,23 @@ a:hover {
   margin: -1px;
 }
 
+/* Visible debug badge for animated fallback attempts (mobile debugging) */
+.fallback-debug {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  padding: 6px 8px;
+  font-size: 12px;
+  border-radius: 6px;
+  z-index: 60;
+  pointer-events: none;
+  max-width: 70%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 @media (min-width: 768px) {
   .video-play-btn {
     width: 48px;
