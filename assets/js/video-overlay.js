@@ -1,61 +1,30 @@
 (function () {
-  /*************  ✨ Windsurf Command ⭐  *************/
-  /**
-   * Adds a video playback control overlay to a container element
-   * @param {HTMLElement} container - The container element to add the overlay to
-   * @param {HTMLVideoElement} video - The video element to add the overlay to
-   * @throws {Error} If the container or video element is not found
-   */
-
-/*************  ✨ Windsurf Command 🌟  *************/
-const VideoPlayOverlay = ({ container, video }) => {
-  const [overlay, setOverlay] = React.useState(null);
-  const [btn, setBtn] = React.useState(null);
-  /*******  4ce06ef1-092f-460f-a271-c60dc9bf47d1  *******/
   function showVideoPlayOverlay(container, video) {
     try {
       if (!container || !video) return;
       if (container.querySelector(".video-overlay")) return;
 
-  React.useEffect(() => {
-    if (!container || !video) return;
       var overlay = document.createElement("div");
       overlay.className = "video-overlay";
       overlay.setAttribute("role", "region");
       overlay.setAttribute("aria-label", "Video playback control");
 
-    const overlayElem = document.createElement("div");
-    overlayElem.className = "video-overlay";
-    overlayElem.setAttribute("role", "region");
-    overlayElem.setAttribute("aria-label", "Video playback control");
       var btn = document.createElement("button");
       btn.className = "video-play-btn";
       btn.type = "button";
       btn.setAttribute("aria-label", "Play video");
       btn.innerHTML = "▶";
 
-    const btnElem = document.createElement("button");
-    btnElem.className = "video-play-btn";
-    btnElem.type = "button";
-    btnElem.setAttribute("aria-label", "Play video");
-    btnElem.innerHTML = "▶";
       overlay.appendChild(btn);
 
-    overlayElem.appendChild(btnElem);
       // ensure container is positioned for absolute overlay
       var computed = window.getComputedStyle(container);
       if (computed.position === "static" || !computed.position) {
         container.style.position = "relative";
       }
 
-    // ensure container is positioned for absolute overlay
-    const computed = window.getComputedStyle(container);
-    if (computed.position === "static" || !computed.position) {
-      container.style.position = "relative";
-    }
       container.appendChild(overlay);
 
-    container.appendChild(overlayElem);
       function cleanUp() {
         try {
           overlay.remove();
@@ -64,8 +33,6 @@ const VideoPlayOverlay = ({ container, video }) => {
         }
       }
 
-    setOverlay(overlayElem);
-    setBtn(btnElem);
       function tryPlay() {
         // ensure muted to maximize autoplay chances
         try {
@@ -84,55 +51,9 @@ const VideoPlayOverlay = ({ container, video }) => {
         }
       }
 
-    return () => {
-      try {
-        overlayElem.remove();
-      } catch (e) {
-        if (overlayElem.parentNode) overlayElem.parentNode.removeChild(overlayElem);
-      }
-    };
-  }, [container, video]);
-
-  const cleanUp = React.useCallback(() => {
-    try {
-      overlay.remove();
-    } catch (e) {
-      if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
-    }
-  }, [overlay]);
-
-  const tryPlay = React.useCallback(() => {
-    // ensure muted to maximize autoplay chances
-    try {
-      video.muted = true;
-    } catch (e) {}
-    const p = video.play();
-    if (p && typeof p.then === "function") {
-      p.then(cleanUp).catch(cleanUp);
-    } else {
-      // If play() is not a promise, just remove overlay and hope for the best
-      cleanUp();
-    }
-  }, [video, cleanUp]);
-
-  const handleClick = React.useCallback(
-    (e) => {
-      e.preventDefault();
-      tryPlay();
-    },
-    [tryPlay]
-  );
-
-  const handleKeyDown = React.useCallback(
-    (e) => {
-      if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
       btn.addEventListener("click", function (e) {
         e.preventDefault();
         tryPlay();
-      }
-    },
-    [tryPlay]
-  );
       });
       overlay.addEventListener("click", function (e) {
         if (e.target === overlay) tryPlay();
@@ -144,33 +65,6 @@ const VideoPlayOverlay = ({ container, video }) => {
         }
       });
 
-  return (
-    overlay && (
-      <React.Fragment>
-        <div
-          ref={(elem) => {
-            if (elem) setOverlay(elem);
-          }}
-          className="video-overlay"
-          role="region"
-          aria-label="Video playback control"
-          tabIndex={0}
-          onClick={handleClick}
-          onKeyDown={handleKeyDown}
-        >
-          <button
-            ref={(elem) => {
-              if (elem) setBtn(elem);
-            }}
-            className="video-play-btn"
-            type="button"
-            aria-label="Play video"
-          >
-            ▶
-          </button>
-        </div>
-      </React.Fragment>
-    )
       // Make the overlay itself focusable for keyboard users
       overlay.tabIndex = 0;
       // Focus button for immediate activation
@@ -179,7 +73,6 @@ const VideoPlayOverlay = ({ container, video }) => {
       console.error("showVideoPlayOverlay error", err);
     }
   }
-/*******  500eb3b4-7575-4e3f-84c7-63242bf73066  *******/
 
   // expose globally
   window.showVideoPlayOverlay = showVideoPlayOverlay;
