@@ -394,7 +394,7 @@ a:hover {
 }
 
 .logo-img {
-  height: 16px; /* slightly smaller */
+  height: 12px; /* slightly smaller */
   width: auto; /* preserve the image's original aspect ratio */
   display: block;
 }
