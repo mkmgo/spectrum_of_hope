@@ -292,7 +292,7 @@ a:hover {
 
 .site-footer .footer-inner {
   max-width: 1000px;
-  margin: 20px auto 0;
+  margin: 20px auto 20px; /* add bottom space so footer doesn't sit flush on viewport floor */
   width: 100%;
   box-sizing: border-box;
   background: var(--block-bg); /* match top navigation block */
