@@ -284,19 +284,25 @@ a:hover {
 
 /* --- Footer Styling --- */
 .site-footer {
-  background: var(--block-bg);
-  border-top: 1px solid var(--border-color);
-  padding: 14px 20px;
   width: 100%;
+  box-sizing: border-box;
+  padding: 0; /* inner box will provide the visible background and padding */
+  background: transparent;
 }
 
 .site-footer .footer-inner {
   max-width: 1000px;
-  margin: 0 auto;
+  margin: 20px auto 0;
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--block-bg); /* match top navigation block */
+  border-top: 1px solid var(--border-color);
+  padding: 14px 20px; /* match spacing to the nav/top */
   display: flex;
   align-items: center;
   justify-content: center; /* center the copyright + logo */
   gap: 12px;
+  border-radius: 8px;
 }
 
 .footer-logo {

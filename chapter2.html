@@ -111,12 +111,12 @@
 
           if (mediaType === "video") {
             mediaHTML = `
-                    <video autoplay muted loop controls style="width: 100%; height: auto; display: block; border-radius: 8px;">
-                        <source src="${mediaData.url}" type="video/webm">
-                        Your browser does not support the video tag.
-                    </video>
-                    <figcaption>${mediaData.caption}</figcaption>
-                `;
+                <video autoplay muted loop style="width: 100%; height: auto; display: block; border-radius: 8px;">
+                  <source src="${mediaData.url}" type="video/webm">
+                  Your browser does not support the video tag.
+                </video>
+                <figcaption>${mediaData.caption}</figcaption>
+              `;
           } else {
             // Image rendering
             const webpUrl = mediaData.url.replace(/\.(jpe?g|png)$/i, ".webp");
