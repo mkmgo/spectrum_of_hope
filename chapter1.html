@@ -61,6 +61,8 @@
           return;
         }
 
+        // Overlay helper moved to shared script: assets/js/video-overlay.js
+
         // 1. Set Page Title
         const pageTitleElement = document.getElementById("page-title");
         if (pageTitleElement) pageTitleElement.textContent = pageData.title;
@@ -147,9 +149,10 @@
           if (mediaType === "video") {
             const video = imgContainer.querySelector("video");
             if (video) {
-              video
-                .play()
-                .catch((err) => console.debug("Video autoplay blocked:", err));
+              video.play().catch((err) => {
+                console.debug("Video autoplay blocked:", err);
+                showVideoPlayOverlay(imgContainer, video);
+              });
             }
           }
         } else if (imgContainer) {
@@ -255,5 +258,6 @@
         </div>
       </div>
     </footer>
+    <script src="assets/js/video-overlay.js"></script>
   </body>
 </html>

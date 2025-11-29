@@ -87,6 +87,8 @@
         const pageData = langData[PAGE_ID];
         if (!pageData) return;
 
+        // Overlay helper moved to shared script: assets/js/video-overlay.js
+
         console.debug("injectIndexContent pageData:", pageData);
         console.debug("media field:", pageData.media);
         console.debug("image field:", pageData.image);
@@ -181,9 +183,10 @@
           if (mediaType === "video") {
             const video = imgContainer.querySelector("video");
             if (video) {
-              video
-                .play()
-                .catch((err) => console.debug("Video autoplay blocked:", err));
+              video.play().catch((err) => {
+                console.debug("Video autoplay blocked:", err);
+                showVideoPlayOverlay(imgContainer, video);
+              });
             }
           }
 
@@ -313,5 +316,6 @@
         </div>
       </div>
     </footer>
+    <script src="assets/js/video-overlay.js"></script>
   </body>
 </html>
