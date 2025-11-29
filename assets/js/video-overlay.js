@@ -177,7 +177,8 @@
             cleanup();
             try {
               // Remove original video element
-              if (video && video.parentNode) video.parentNode.removeChild(video);
+              if (video && video.parentNode)
+                video.parentNode.removeChild(video);
 
               // Create a looping video element for MP4
               const element = document.createElement("video");
@@ -257,7 +258,8 @@
             );
             try {
               // Remove original video element
-              if (video && video.parentNode) video.parentNode.removeChild(video);
+              if (video && video.parentNode)
+                video.parentNode.removeChild(video);
 
               // Use img element for image formats (WebP/GIF)
               img.alt = caption || "";
