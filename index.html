@@ -16,6 +16,11 @@
         document.body.setAttribute("data-theme", currentTheme);
       });
 
+      /**
+       * Toggle the page theme between light and dark mode.
+       * This function updates the 'data-theme' attribute on the document body
+       * and stores the new theme in local storage.
+       */
       function toggleTheme() {
         const currentTheme = document.body.getAttribute("data-theme");
         const newTheme = currentTheme === "light" ? "dark" : "light";
@@ -28,6 +33,13 @@
       let currentLang = localStorage.getItem("lang") || "en";
       const PAGE_ID = "index"; // Fixed ID for this page
 
+      /**
+       * Loads the content.json file and populates the contentData object.
+       * If the file cannot be fetched (e.g. due to file:// or network issues),
+       * it will fallback to using inline content for testing purposes.
+       * Finally, it will call injectIndexContent with the current language.
+       * @return {Promise<void>} Resolves when the content is loaded successfully.
+       */
       async function loadIndexContent() {
         try {
           const response = await fetch("./content.json");
@@ -80,6 +92,12 @@
         injectIndexContent(currentLang);
       }
 
+      /**
+       * Injects page content from the content.json file into the current page.
+       *
+       * @param {string} lang - The language to inject content for.
+       * @returns {undefined}
+       */
       function injectIndexContent(lang) {
         const langData = contentData[lang];
         if (!langData) return;
@@ -89,7 +107,10 @@
 
         // Overlay helper moved to shared script: assets/js/video-overlay.js
 
-        console.debug("injectIndexContent pageData:", pageData);
+        console.debug(
+          "injectIndexContent: pageData.title=",
+          pageData && pageData.title
+        );
         console.debug("media field:", pageData.media);
         console.debug("image field:", pageData.image);
 
@@ -104,28 +125,6 @@
         document.querySelectorAll(".lang-btn").forEach((btn) => {
           btn.classList.toggle("active", btn.dataset.lang === lang);
         });
-
-        // 🛑 NEW: Inject Sequential Navigation Links (Index only needs 'Next')
-        const navTop = document.getElementById("chapter-nav-top");
-        if (navTop) {
-          let navHTML = "";
-
-          // Index has no previous link, so we use a placeholder for alignment
-          navHTML += `<span class="nav-placeholder"></span> | `;
-
-          // Home Link (This is the Home page)
-          navHTML += `<a href="${pageData.page_url}" class="nav-home">☰</a> | `;
-
-          // Next Link
-          if (pageData.next_story_link) {
-            navHTML += `<a href="${pageData.next_story_link}" class="nav-next">Next ↣</a>`;
-          } else {
-            navHTML += `<span class="nav-placeholder"></span>`;
-          }
-
-          navTop.innerHTML = navHTML;
-        }
-        // ----------------------------------------------------
 
         // 3. Inject Media (Image or Video), Caption, and Set Size
         const imgContainer = document.getElementById("image-container");
@@ -230,17 +229,6 @@
         const introElement = document.getElementById("story-intro");
         if (introElement) introElement.innerHTML = `<p>${pageData.intro}</p>`;
 
-        // 🛑 NEW: Inject Subheadline 🛑
-        const subheadlineElement = document.getElementById("index-subheadline");
-        if (subheadlineElement)
-          subheadlineElement.textContent = pageData.subheadline;
-
-        // 🛑 NEW: Inject Body Text 🛑
-        // Using innerHTML with <p> tags allows you to use HTML formatting (like <strong>) in content.json
-        const bodyTextElement = document.getElementById("index-body-text");
-        if (bodyTextElement)
-          bodyTextElement.innerHTML = `<p>${pageData.body_text}</p>`;
-
         // 5. Inject Chapter Navigation List
         const navList = document.getElementById("chapters-list");
         if (navList) {
@@ -281,6 +269,10 @@
           footerImg.alt =
             pageData && pageData.title ? pageData.title : "Site logo";
           footerImg.loading = "lazy";
+          /**
+           * Hide the footer logo if the image fails to load.
+           * This is a fallback to ensure that the footer logo doesn't take up space if the image is not found.
+           */
           footerImg.onerror = function () {
             this.style.display = "none";
           };
@@ -289,6 +281,11 @@
         console.warn("Footer logo injection failed", e);
       }
 
+      /**
+       * Switches the language of the page content to the provided new language.
+       * If the language is supported, the page content is reloaded using the new language.
+       * @param {string} newLang - The new language to switch to.
+       */
       function switchLanguage(newLang) {
         if (contentData[newLang]) {
           localStorage.setItem("lang", newLang);
@@ -331,7 +328,7 @@
           >
             <img
               id="footer-logo-img"
-              src="https://res.cloudinary.com/dqwm4pdbz/image/upload/v1764520461/imprintic-emblem_olmzlh.png"
+              src="https://res.cloudinary.com/dqwm4pdbz/image/upload/v1764372864/imprintic_logo_gmmf4a.png"
               class="logo-img"
               alt="Site logo"
               loading="lazy"
