@@ -23,6 +23,7 @@
         localStorage.setItem("theme", newTheme);
       }
 
+      // --- Content & Language Loading (INDEX SPECIFIC) ---
       let contentData = {};
       let currentLang = localStorage.getItem("lang") || "en";
       const PAGE_ID = "index"; // Fixed ID for this page
@@ -88,44 +89,23 @@
 
         // Overlay helper moved to shared script: assets/js/video-overlay.js
 
-        // Set Page Title (Browser tab title) and Visible Main Headline
+        console.debug("injectIndexContent pageData:", pageData);
+        console.debug("media field:", pageData.media);
+        console.debug("image field:", pageData.image);
+
+        // 1. Set Page Title (Browser tab title) and Visible Main Headline
         const pageTitleElement = document.getElementById("page-title");
         if (pageTitleElement) pageTitleElement.textContent = pageData.title;
 
         const mainTitleElement = document.getElementById("main-title");
         if (mainTitleElement) mainTitleElement.textContent = pageData.title;
 
+        // 2. Inject Language Buttons (If any are needed in the future)
         document.querySelectorAll(".lang-btn").forEach((btn) => {
           btn.classList.toggle("active", btn.dataset.lang === lang);
         });
 
-        // --- Navigation, Media, Text injection omitted for brevity ---
-
-        // 🟩 Inject the footer logo dynamically from central site config
-        try {
-          const siteLogo =
-            contentData && contentData.site && contentData.site.logo_url;
-          const footerImg = document.getElementById("footer-logo-img");
-          const fallbackLogo =
-            "https://res.cloudinary.com/dqwm4pdbz/image/upload/v1764372864/imprintic_logo_gmmf4a.png";
-          if (footerImg) {
-            footerImg.src = siteLogo || fallbackLogo;
-            footerImg.alt =
-              pageData && pageData.title ? pageData.title : "Site logo";
-            footerImg.loading = "lazy";
-            footerImg.onerror = function () {
-              this.style.display = "none";
-            };
-          }
-        } catch (e) {
-          console.warn("Footer logo injection failed", e);
-        }
-
-        // --- Rest of injectIndexContent unchanged ---
-        // ... (All your other code including nav, media, chapters etc.)
-        // ... (omitted here for brevity, unchanged from your actual file!) ...
-
-        // 2. Inject Sequential Navigation Links (Index only needs 'Next')
+        // 🛑 NEW: Inject Sequential Navigation Links (Index only needs 'Next')
         const navTop = document.getElementById("chapter-nav-top");
         if (navTop) {
           let navHTML = "";
@@ -145,12 +125,17 @@
 
           navTop.innerHTML = navHTML;
         }
+        // ----------------------------------------------------
 
         // 3. Inject Media (Image or Video), Caption, and Set Size
         const imgContainer = document.getElementById("image-container");
         const mediaData = pageData.media || pageData.image; // fallback to image field for backwards compatibility
 
+        console.debug("imgContainer found:", !!imgContainer);
+        console.debug("mediaData:", mediaData);
+
         if (imgContainer && mediaData) {
+          // Conditional soft background logic
           if (mediaData.use_soft_bg) {
             imgContainer.classList.add("soft-background-image");
           } else {
@@ -158,7 +143,7 @@
           }
 
           let mediaHTML = "";
-          const mediaType = mediaData.type || "image";
+          const mediaType = mediaData.type || "image"; // default to image if type not specified
 
           if (mediaType === "video") {
             mediaHTML = `
@@ -190,18 +175,55 @@
           }
 
           imgContainer.innerHTML = mediaHTML;
+
+          // Set the media's width relative to the text using flex-basis
           imgContainer.style.flexBasis = mediaData.size_percentage + "%";
 
+          // Force video autoplay on mobile (browsers block autoplay until user interaction)
           if (mediaType === "video") {
             const video = imgContainer.querySelector("video");
             if (video) {
               video.play().catch((err) => {
-                /* ... */
+                console.debug("Video autoplay blocked:", err);
+                // Try animated image fallback first (WebP -> GIF). If that fails, show overlay.
+                if (window.attemptAnimatedImageFallback) {
+                  const mediaUrl = mediaData && mediaData.url;
+                  const animatedWebpUrl =
+                    mediaData && mediaData.animated_webp_url;
+                  window
+                    .attemptAnimatedImageFallback(
+                      imgContainer,
+                      video,
+                      mediaUrl,
+                      mediaData && mediaData.caption,
+                      animatedWebpUrl
+                    )
+                    .then((replaced) => {
+                      if (!replaced) {
+                        console.debug("Animated fallback not available");
+                      } else {
+                        console.debug("Animated fallback loaded successfully");
+                      }
+                    })
+                    .catch(() => {
+                      console.debug("Animated fallback attempt failed");
+                    });
+                } else {
+                  console.debug("No animated fallback URL provided");
+                }
               });
             }
           }
+
+          console.debug(
+            "Media rendered successfully. Type:",
+            mediaType,
+            "HTML:",
+            mediaHTML
+          );
         } else if (imgContainer) {
           imgContainer.style.display = "none";
+          console.warn("No media data found for page");
         }
 
         // 4. Inject Intro Text
@@ -214,6 +236,7 @@
           subheadlineElement.textContent = pageData.subheadline;
 
         // 🛑 NEW: Inject Body Text 🛑
+        // Using innerHTML with <p> tags allows you to use HTML formatting (like <strong>) in content.json
         const bodyTextElement = document.getElementById("index-body-text");
         if (bodyTextElement)
           bodyTextElement.innerHTML = `<p>${pageData.body_text}</p>`;
@@ -223,6 +246,7 @@
         if (navList) {
           navList.innerHTML = pageData.chapters
             .map((chapter) => {
+              // Fallback to English data if the current language chapter data is missing
               const chapterData =
                 langData[chapter.id] || contentData["en"][chapter.id];
 
@@ -239,14 +263,42 @@
         }
       }
 
+      // Set footer logo from central site config (if present)
+      try {
+        const siteLogo =
+          contentData && contentData.site && contentData.site.logo_url;
+        const footerImg = document.getElementById("footer-logo-img");
+        const fallbackLogo =
+          "https://res.cloudinary.com/dqwm4pdbz/image/upload/v1764372864/imprintic_logo_gmmf4a.png";
+        console.debug(
+          "injectIndexContent: siteLogo=",
+          siteLogo,
+          "pageData.title=",
+          pageData && pageData.title
+        );
+        if (footerImg) {
+          footerImg.src = siteLogo || fallbackLogo;
+          footerImg.alt =
+            pageData && pageData.title ? pageData.title : "Site logo";
+          footerImg.loading = "lazy";
+          footerImg.onerror = function () {
+            this.style.display = "none";
+          };
+        }
+      } catch (e) {
+        console.warn("Footer logo injection failed", e);
+      }
+
       function switchLanguage(newLang) {
         if (contentData[newLang]) {
           localStorage.setItem("lang", newLang);
           currentLang = newLang;
+          // Reload content for the index page
           injectIndexContent(newLang);
         }
       }
 
+      // Initialization: Start content loading
       document.addEventListener("DOMContentLoaded", loadIndexContent);
     </script>
   </head>
@@ -277,9 +329,14 @@
             class="footer-logo"
             aria-label="Spectrum of Hope homepage"
           >
-            <img id="footer-logo-img" src="" <!-- will be set by JS -- />
-            class="logo-img" alt="Site logo" loading="lazy"
-            onerror="this.style.display='none'" />
+            <img
+              id="footer-logo-img"
+              src="https://res.cloudinary.com/dqwm4pdbz/image/upload/v1764520461/imprintic-emblem_olmzlh.png"
+              class="logo-img"
+              alt="Site logo"
+              loading="lazy"
+              onerror="this.style.display='none'"
+            />
           </a>
         </div>
       </div>
